@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';  
-import './specialOffers.css';
+import './SpecialOffers.css';
 
 const SpecialOffers = () => {
   const offers = [

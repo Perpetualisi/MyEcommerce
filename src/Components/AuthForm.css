@@ -1,0 +1,97 @@
+.auth-form-container {
+    width: 100%;
+    max-width: 400px; 
+    margin: 100px auto; 
+    padding: 30px;
+    background-color: #222; 
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); 
+    color: white;
+}
+
+.auth-form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #f39c12; 
+}
+
+.form-group {
+    margin-bottom: 20px; 
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    background-color: #333;
+    color: white;
+}
+
+.show-password {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    background-color: #f39c12;
+    border: none;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #e67e22; 
+}
+
+.submit-btn:disabled {
+    background-color: #aaa; 
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+    .auth-form-container {
+        width: 90%; 
+        margin: 40px auto; 
+        padding: 20px;
+    }
+
+    .auth-form-container h2 {
+        font-size: 20px; 
+    }
+
+    .input-field {
+        padding: 10px; 
+        font-size: 14px; 
+    }
+
+    .submit-btn {
+        padding: 10px; 
+        font-size: 14px; 
+    }
+
+    .show-password {
+        margin-bottom: 15px; 
+    }
+}

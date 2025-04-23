@@ -1,0 +1,130 @@
+
+.contact-container {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 80px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+.contact-container h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Make button full width on smaller devices */
+    box-sizing: border-box;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.form-status {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.1rem;
+    color: #4CAF50;
+}
+
+
+@media (max-width: 1024px) {
+    .contact-container {
+        padding: 20px 15px;
+    }
+
+    .contact-container h1 {
+        font-size: 1.8rem;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .contact-container {
+        padding: 20px 10px;
+    }
+
+    .contact-container h1 {
+        font-size: 1.6rem;
+    }
+
+    .form-group label {
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.95rem;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 1rem;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .contact-container h1 {
+        font-size: 1.4rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.9rem;
+    }
+
+    button {
+        font-size: 0.95rem;
+        padding: 10px 12px;
+    }
+}

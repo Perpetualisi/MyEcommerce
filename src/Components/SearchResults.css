@@ -1,0 +1,145 @@
+.search-results {
+  padding: 2rem;
+  text-align: center;
+}
+
+.search-results h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  padding: 0.6rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem auto 2rem;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1.2rem;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.product-card p {
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.add-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-btn:hover {
+  background-color: #0056b3;
+}
+
+.no-results {
+  font-size: 1rem;
+  color: #888;
+}
+
+.category-filter {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.category-filter button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background: #f8f8f8;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.category-filter button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.category-filter button:hover {
+  background: #007bff;
+  color: white;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  margin: 2rem auto;
+  border: 5px solid #eee;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .search-results {
+    padding: 1.5rem 1rem;
+  }
+
+  .search-results h2 {
+    font-size: 1.5rem;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .results-grid {
+    gap: 1rem;
+  }
+
+  .product-card {
+    padding: 1rem;
+  }
+
+  .product-card h3 {
+    font-size: 1rem;
+  }
+
+  .product-card p {
+    font-size: 0.95rem;
+  }
+
+  .add-btn {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+}

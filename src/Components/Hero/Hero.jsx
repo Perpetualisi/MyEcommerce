@@ -6,8 +6,8 @@ const images = [
   '/banner2.jpg',
   '/banner3.jpg',
   '/banner4.jpg',
-  '/banner9.jpg',
-  '/banner7.jpg',
+  '/banner5.jpg',
+  '/banner6.jpg',
 ];
 
 const Hero = () => {
@@ -16,19 +16,21 @@ const Hero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 4000); // Image transition interval
-
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section
-      className="hero-banner"
-      style={{
-        backgroundImage: `url(${images[currentImage]})`,
-        transition: 'background-image 1s ease-in-out', // Smooth image transition
-      }}
-    />
+    <section className="hero-banner">
+      {images.map((img, index) => (
+        <img
+          key={index}
+          src={img}
+          className={`hero-image ${index === currentImage ? 'active' : ''}`}
+          alt=""
+        />
+      ))}
+    </section>
   );
 };
 

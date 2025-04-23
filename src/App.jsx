@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar/Navbar';
 import Hero from './Components/Hero/Hero';
-import FeaturedProducts from './Components/FeaturedProducts/FeaturedProducts';
+import FeaturedProducts from './Components/featuredProducts/featuredProducts';
 import Categories from './Components/Categories/Categories';
 import SpecialOffers from './Components/SpecialOffers/SpecialOffers';
 import About from './Components/About/About';

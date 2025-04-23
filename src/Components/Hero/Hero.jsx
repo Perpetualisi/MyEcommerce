@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './hero.css';
+import './Hero.css';
 
 const images = [
   '/banner1.jpg',

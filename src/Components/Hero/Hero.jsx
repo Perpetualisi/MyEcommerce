@@ -20,7 +20,7 @@ const Hero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 4000); 
+    }, 4000); // Image transition interval
 
     return () => clearInterval(interval);
   }, []);
@@ -30,10 +30,9 @@ const Hero = () => {
       className="hero-banner"
       style={{
         backgroundImage: `url(${images[currentImage]})`,
-        transition: 'background-image 1s ease-in-out', // Smooth transition for image change
+        transition: 'background-image 1s ease-in-out', // Smooth image transition
       }}
-    >
-    </section>
+    />
   );
 };
 

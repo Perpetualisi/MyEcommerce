@@ -3,7 +3,7 @@ import './Hero.css';
 
 const images = [
   '/banner11.jpg',
-  '/banner22.jpg',
+  '/banner2.jpg',
   '/banner3.jpg',
   '/banner4.jpg',
   '/banner5.jpg',
@@ -11,6 +11,7 @@ const images = [
   '/banner7.jpg',
   '/banner8.jpg',
   '/banner9.jpg',
+  '/banner10.jpg',
 ];
 
 const Hero = () => {

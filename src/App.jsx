@@ -7,7 +7,7 @@ import Categories from './Components/Categories/Categories';
 import SpecialOffers from './Components/SpecialOffers/SpecialOffers';
 import About from './Components/About/About';
 import Newsletter from './Components/Newsletter/Newsletter';
-import Footer from './Components/Footer/Footer';
+import Footer from './Components/footer/footer';
 import Contact from './Components/Contact/Contact';
 import SignUp from './Components/SignUp';
 import Login from './Components/Login';

@@ -1,5 +1,5 @@
 import React from 'react';
-import './categories.css'; 
+import './Categories.css'; 
 import { Link } from 'react-router-dom'; 
 
 const Categories = () => {

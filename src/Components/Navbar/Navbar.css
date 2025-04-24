@@ -190,7 +190,7 @@
 
   .navbar-menu-icon {
     display: block;
-    font-size: 50px;
+    font-size: 40px;
     top: 10px;
     color: white;
   }
@@ -206,7 +206,7 @@
   }
 
   .navbar-search input {
-    width: 120px;
+    width: 100px;
     margin-right: 10px;
   }
 

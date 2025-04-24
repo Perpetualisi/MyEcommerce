@@ -85,8 +85,13 @@
 }
 
 .navbar-cart-mobile {
-  display: none;
+  display: block; 
+  position: absolute; /* Position it independently */
+  top: 20px; /* Adjust the top position to align with the search bar */
+  right: 220px; /* Adjust this to position it close to the search bar */
+  z-index: 1000; /* Make sure it's above other elements */
 }
+
 
 .navbar-search {
   display: flex;
@@ -136,19 +141,16 @@
 }
 
 @media (max-width: 768px) {
-
   .navbar {
     padding: 15px 10px;
   }
 
   .navbar-logo {
-    font-size: 20px;
-  }
-  .navbar-links {
-    gap: 10px;
+    display: none; /* Hide logo on mobile */
   }
 
   .navbar-links {
+    gap: 10px;
     display: none;
     width: 100%;
     flex-direction: column;
@@ -177,11 +179,14 @@
   }
 
   .navbar-cart-mobile {
-    display: block;
-    margin-left: auto;
-    padding: 10px 0;
-    text-align: center;
+    display: block; 
+    font-size: 30px;
+    position: absolute;
+    top: 20px; /* Adjust top position as needed */
+    right: 100px; /* Keep cart at the top-right of the navbar */
+    z-index: 1000; /* Ensure it’s above the other navbar items */
   }
+
 
   .navbar-menu-icon {
     display: block;
@@ -192,7 +197,7 @@
   .navbar-search {
     width: 100%;
     margin-top: 10px;
-    margin-left: -35px;
+    margin-left: -100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -200,7 +205,7 @@
   }
 
   .navbar-search input {
-    width: 100px;
+    width: 150px;
     margin-right: 10px;
   }
 

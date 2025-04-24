@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = ({ cartItemCount }) => {
@@ -27,6 +27,14 @@ const Navbar = ({ cartItemCount }) => {
         <Link to="/">MyEcommerce</Link>
       </div>
 
+      {/* Cart icon positioned outside the menu */}
+      <div className="navbar-cart-mobile">
+        <Link to="/cart" onClick={handleLinkClick}>
+          🛒
+          {cartItemCount > 0 && <span className="cart-count">{cartItemCount}</span>}
+        </Link>
+      </div>
+
       <ul className={`navbar-links ${isMenuOpen ? 'active' : ''}`}>
         <li><Link to="/" onClick={handleLinkClick}>Home</Link></li>
         <li><Link to="/featured" onClick={handleLinkClick}>FeaturedProducts</Link></li>
@@ -43,13 +51,6 @@ const Navbar = ({ cartItemCount }) => {
               <li><Link to="/signup" onClick={handleLinkClick}>Sign Up</Link></li>
             </ul>
           )}
-        </li>
-
-        <li className="navbar-cart-mobile">
-          <Link to="/cart" onClick={handleLinkClick}>
-            🛒
-            {cartItemCount > 0 && <span className="cart-count">{cartItemCount}</span>}
-          </Link>
         </li>
       </ul>
 

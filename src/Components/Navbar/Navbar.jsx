@@ -27,7 +27,7 @@ const Navbar = ({ cartItemCount }) => {
         <Link to="/">MyEcommerce</Link>
       </div>
 
-      {/* Cart icon positioned outside the menu */}
+      
       <div className="navbar-cart-mobile">
         <Link to="/cart" onClick={handleLinkClick}>
           🛒
@@ -73,4 +73,4 @@ const Navbar = ({ cartItemCount }) => {
   );
 };
 
-export default Navbar;
+export default Navbar;           

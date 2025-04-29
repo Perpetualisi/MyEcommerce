@@ -115,7 +115,7 @@
 }
 
 .search-container input {
-  width: 80%;
+  width: 70%;
   padding: 12px 50px 12px 12px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -160,6 +160,10 @@
     left: auto;
     right: 1rem;
     width: 250px;
+  }
+  
+  .search-container input {
+    width: 60%; 
   }
 
 }

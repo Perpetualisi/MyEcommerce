@@ -19,7 +19,6 @@ import './App.css';
 
 const App = () => {
   const [cart, setCart] = useState([]); 
-  const [isDarkMode, setIsDarkMode] = useState(false); 
 
   const handleAddToCart = (product) => {
     setCart((prevCart) => [...prevCart, product]);
@@ -42,28 +41,21 @@ const App = () => {
   };
 
   const allProducts = [
-    
     { id: 1, category: 'Electronics', name: 'Samsung Galaxy Tab', price: '$349', image: '/electronics/samsungtab.jpg' },
     { id: 2, category: 'Electronics', name: 'Apple iPhone 15', price: '$999', image: '/electronics/AppleiPhone15.jpg' },
     { id: 3, category: 'Electronics', name: 'Sony Headphones', price: '$199', image: '/electronics/SonyHeadphones.jpg' },
     { id: 4, category: 'Electronics', name: 'LG 4K TV', price: '$799', image: '/electronics/LG4KTV.jpg' },
     { id: 5, category: 'Electronics', name: 'Apple MacBook Pro', price: '$2,399', image: '/electronics/AppleMacBookPro.jpg' },
-
-  
     { id: 6, category: 'Fashion', name: 'Levi\'s Jeans', price: '$59', image: '/fashion/LeviJeans.jpg' },
     { id: 7, category: 'Fashion', name: 'Nike Sneakers', price: '$120', image: '/fashion/NikeSneakers.jpg' },
     { id: 8, category: 'Fashion', name: 'Adidas Hoodie', price: '$55', image: '/fashion/AdidasHoodie.jpg' },
     { id: 9, category: 'Fashion', name: 'Gucci Watch', price: '$800', image: '/fashion/GucciWatch.jpg' },
     { id: 10, category: 'Fashion', name: 'Ray-Ban Sunglasses', price: '$150', image: '/fashion/Sunglasses.jpg' },
-
-    
     { id: 11, category: 'Groceries', name: 'Organic Apples', price: '$4.99', image: '/Groceries/apples.jpg' },
     { id: 12, category: 'Groceries', name: 'Fresh Milk', price: '$1.99', image: '/Groceries/milk.jpg' },
     { id: 13, category: 'Groceries', name: 'Brown Bread', price: '$2.49', image: '/Groceries/bread.jpg' },
     { id: 14, category: 'Groceries', name: 'Eggs (Dozen)', price: '$2.99', image: '/Groceries/eggs.jpg' },
     { id: 15, category: 'Groceries', name: 'Bananas', price: '$1.49', image: '/Groceries/bananas.jpg' },
-
-    
     { id: 16, category: 'Furniture', name: 'Modern Sofa', price: '$499', image: '/Furniture/sofa.jpg' },
     { id: 17, category: 'Furniture', name: 'Wooden Dining Table', price: '$799', image: '/Furniture/diningtable.jpg' },
     { id: 18, category: 'Furniture', name: 'Office Chair', price: '$129', image: '/Furniture/chair.jpg' },
@@ -71,19 +63,10 @@ const App = () => {
     { id: 20, category: 'Furniture', name: 'Bookshelf', price: '$199', image: '/Furniture/bookshef.jpg' },
   ];
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   return (
     <Router>
-      <div className={isDarkMode ? 'dark' : ''}> 
+      <div> 
         <Navbar cartItemCount={cart.length} />
-        
-        
-        <button onClick={toggleDarkMode} className="toggle-btn">
-          Toggle Dark Mode
-        </button>
         
         <Routes>
           <Route

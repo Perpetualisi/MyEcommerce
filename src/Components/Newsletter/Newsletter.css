@@ -63,7 +63,7 @@
   color: #ffeb3b;
 }
 
-/* Responsive adjustments */
+
 @media (min-width: 768px) {
   .newsletter form {
     flex-direction: row;

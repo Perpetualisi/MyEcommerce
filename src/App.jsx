@@ -43,7 +43,7 @@ const App = () => {
   const allProducts = [
     { id: 1, category: 'Electronics', name: 'Samsung Galaxy Tab', price: '$349', image: '/electronics/samsungtab.jpg' },
     { id: 2, category: 'Electronics', name: 'Apple iPhone 15', price: '$999', image: '/electronics/AppleiPhone15.jpg' },
-    { id: 3, category: 'Electronics', name: 'Sony Headphones', price: '$199', image: '/electronics/SonyHeadphones.jpg' },
+    { id: 3, category: 'Electronics', name: 'Sony Headphones', price: '$199', image: '/electronics/sonyheadphones.jpg' },
     { id: 4, category: 'Electronics', name: 'LG 4K TV', price: '$799', image: '/electronics/LG4KTV.jpg' },
     { id: 5, category: 'Electronics', name: 'Apple MacBook Pro', price: '$2,399', image: '/electronics/AppleMacBookPro.jpg' },
     { id: 6, category: 'Fashion', name: 'Levi\'s Jeans', price: '$59', image: '/fashion/LeviJeans.jpg' },

@@ -8,6 +8,8 @@ const images = [
   '/banner4.jpg',
   '/banner5.jpg',
   '/banner6.jpg',
+  '/banner7.jpg',
+  '/banner8.jpg',
 ];
 
 const Hero = () => {

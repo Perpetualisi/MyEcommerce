@@ -6,6 +6,7 @@
 .search-results h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
+  margin-top: 80px;
 }
 
 .search-input {
@@ -49,7 +50,7 @@
 
 .add-btn {
   background-color: #007bff;
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   padding: 0.6rem 1rem;
   border-radius: 4px;
@@ -76,8 +77,8 @@
 
 .category-filter button {
   padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  background: #f8f8f8;
+  border: 1px solid #cccccc;
+  background: #1e1d1d;
   border-radius: 4px;
   cursor: pointer;
   transition: 0.2s ease;

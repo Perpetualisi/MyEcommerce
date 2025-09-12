@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import './Hero.css';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";   // ✅ Import Link
+import "./Hero.css";
 
 const images = [
-  '/banner1.jpg',
-  '/banner2.jpg',
-  '/banner3.jpg',
-  '/banner4.jpg',
-  '/banner5.jpg',
-  '/banner6.jpg',
-  '/banner7.jpg',
+  "/banner2.jpg",
+  "/banner3.jpg",
+  "/banner4.jpg",
+  "/banner5.jpg",
+  "/banner6.jpg",
 ];
 
 const Hero = () => {
@@ -17,20 +16,43 @@ const Hero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 4000);
+    }, 5000); // Change every 5 seconds
     return () => clearInterval(interval);
   }, []);
 
   return (
     <section className="hero-banner">
+      {/* Background Images */}
       {images.map((img, index) => (
         <img
           key={index}
           src={img}
-          className={`hero-image ${index === currentImage ? 'active' : ''}`}
-          alt=""
+          className={`hero-image ${index === currentImage ? "active" : ""}`}
+          alt={`Hero Banner ${index + 1}`}
         />
       ))}
+
+      {/* Overlay */}
+      <div className="overlay"></div>
+
+      {/* Content */}
+      <div className="hero-content">
+        <h1>Discover Modern Experiences</h1>
+        <p>Explore the best of creativity, technology, and design in one place.</p>
+        <Link to="/offers">
+          <button className="hero-btn">Get Started</button>
+        </Link>
+      </div>
+
+      {/* Indicators */}
+      <div className="indicators">
+        {images.map((_, i) => (
+          <span
+            key={i}
+            className={`dot ${i === currentImage ? "active" : ""}`}
+          ></span>
+        ))}
+      </div>
     </section>
   );
 };

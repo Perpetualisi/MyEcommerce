@@ -9,14 +9,6 @@ const Navbar = ({ cartItemCount }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const navigate = useNavigate();
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleAccountMenu = () => setIsAccountMenuOpen(!isAccountMenuOpen);
-  const handleSearchChange = (e) => setSearchQuery(e.target.value);
-  const handleLinkClick = () => {
-    setIsMenuOpen(false);
-    setIsAccountMenuOpen(false);
-  };
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -25,43 +17,44 @@ const Navbar = ({ cartItemCount }) => {
     }
   };
 
+  const closeMenus = () => {
+    setIsMenuOpen(false);
+    setIsAccountMenuOpen(false);
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <div className="navbar-logo">
-          <Link to="/" onClick={handleLinkClick}>Vendo</Link>
-        </div>
+        <Link to="/" className="navbar-logo" onClick={closeMenus}>Vendo</Link>
       </div>
 
-      <div className="navbar-search">
-        <button onClick={() => setIsSearchOpen(true)}>🔍</button>
-      </div>
+      <div className="navbar-icons">
+        <button className="search-btn" onClick={() => setIsSearchOpen(true)}>🔍</button>
 
-      <div className="navbar-cart">
-        <Link to="/cart" onClick={handleLinkClick}>
+        <Link to="/cart" className="cart-link" onClick={closeMenus}>
           🛒
           {cartItemCount > 0 && <span className="cart-count">{cartItemCount}</span>}
         </Link>
-      </div>
 
-      <div className="navbar-menu-icon" onClick={toggleMenu}>
-        {isMenuOpen ? '❌' : '☰'}
+        <button className="menu-icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? '❌' : '☰'}
+        </button>
       </div>
 
       {isMenuOpen && (
         <ul className="navbar-links">
-          <li><Link to="/" onClick={handleLinkClick}>Home</Link></li>
-          <li><Link to="/featured" onClick={handleLinkClick}>Featured Products</Link></li>
-          <li><Link to="/offers" onClick={handleLinkClick}>Special Offers</Link></li>
-          <li><Link to="/categories" onClick={handleLinkClick}>Shop</Link></li>
-          <li><Link to="/about" onClick={handleLinkClick}>About</Link></li>
-          <li><Link to="/contact" onClick={handleLinkClick}>Contact</Link></li>
+          <li><Link to="/" onClick={closeMenus}>Home</Link></li>
+          <li><Link to="/featured" onClick={closeMenus}>Featured</Link></li>
+          <li><Link to="/offers" onClick={closeMenus}>Offers</Link></li>
+          <li><Link to="/categories" onClick={closeMenus}>Shop</Link></li>
+          <li><Link to="/about" onClick={closeMenus}>About</Link></li>
+          <li><Link to="/contact" onClick={closeMenus}>Contact</Link></li>
           <li className="navbar-account">
-            <button onClick={toggleAccountMenu}>Account</button>
+            <button onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}>Account</button>
             {isAccountMenuOpen && (
               <ul className="account-dropdown">
-                <li><Link to="/login" onClick={handleLinkClick}>Login</Link></li>
-                <li><Link to="/signup" onClick={handleLinkClick}>Sign Up</Link></li>
+                <li><Link to="/login" onClick={closeMenus}>Login</Link></li>
+                <li><Link to="/signup" onClick={closeMenus}>Sign Up</Link></li>
               </ul>
             )}
           </li>
@@ -75,7 +68,7 @@ const Navbar = ({ cartItemCount }) => {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={handleSearchChange}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for products..."
                 autoFocus
               />

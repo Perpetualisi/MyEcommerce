@@ -8,8 +8,6 @@ const Newsletter = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (email) {
-      
-      
       setIsSubscribed(true);
       setEmail('');
     }
@@ -17,13 +15,14 @@ const Newsletter = () => {
 
   return (
     <section className="newsletter">
-      <div className="newsletter-content">
-        <h2>Join Our Newsletter</h2>
-        <p>Subscribe to get the latest updates, exclusive discounts, and more!</p>
+      <div className="newsletter-container">
+        <h2>Stay in the Loop!</h2>
+        <p>Subscribe to receive the latest updates, exclusive offers, and more.</p>
+
         {isSubscribed ? (
-          <p className="thank-you-message">Thank you for subscribing!</p>
+          <p className="thank-you-message">🎉 Thank you for subscribing!</p>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="newsletter-form">
             <input
               type="email"
               placeholder="Enter your email"

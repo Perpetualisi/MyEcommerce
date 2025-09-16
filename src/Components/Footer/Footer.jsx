@@ -19,7 +19,7 @@ const Footer = () => {
         <div className="footer-links">
           <h4>Quick Links</h4>
           <ul>
-            <li><Link to="/">Home</Link></li>
+            {/* <li><Link to="/#">Home</Link></li>/ */}
             <li><Link to="/shop">Shop</Link></li>
             <li><Link to="/about">About</Link></li>
             <li><Link to="/contact">Contact</Link></li>
@@ -51,7 +51,7 @@ const Footer = () => {
         {/* Contact */}
         <div className="footer-contact">
           <h4>Contact</h4>
-          <p>Email: <a href="mailto:info@myecommerce.com">info@myecommerce.com</a></p>
+          <p>Email: <a href="mailto:info@myecommerce.com">info@vendor.com</a></p>
           <p>Phone: <a href="tel:+1234567890">+1 234 567 890</a></p>
         </div>
       </div>

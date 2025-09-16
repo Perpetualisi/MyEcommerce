@@ -7,9 +7,9 @@ const images = [
   "/banner122.jpg",
   "/banner2.jpg",
   "/banner3.jpg",
-  "/banner4.jpg",
   "/banner5.jpg",
-  "/banner6.jpg",
+  // "/banner6.jpg",
+  "/banner66.jpg",
   "/banner77.jpg",
 ];
 

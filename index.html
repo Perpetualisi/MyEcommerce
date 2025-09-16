@@ -12,7 +12,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png" />
 
-    <!-- Title (shows in Google & browser tab) -->
+    <!-- Title (Google & Browser Tab) -->
     <title>Ecommerce - Shop Stylish & Affordable Products Online</title>
 
     <!-- ✅ SEO Meta Tags -->
@@ -27,7 +27,7 @@
     <meta name="author" content="Ecommerce Team" />
     <link rel="canonical" href="https://www.ecommerce.com/" />
 
-    <!-- ✅ Open Graph (for Facebook, LinkedIn, WhatsApp) -->
+    <!-- ✅ Open Graph (Facebook, LinkedIn, WhatsApp) -->
     <meta property="og:title" content="Ecommerce - Shop Stylish & Affordable Products Online" />
     <meta
       property="og:description"
@@ -46,11 +46,38 @@
     />
     <meta name="twitter:image" content="https://www.ecommerce.com/social-image.png" />
 
-    <!-- Optional Google Fonts -->
+    <!-- 🌍 Geo & Mobile SEO -->
+    <meta name="geo.region" content="NG" />
+    <meta name="geo.country" content="Nigeria" />
+    <meta name="distribution" content="global" />
+
+    <!-- 🎨 Browser Theme -->
+    <meta name="theme-color" content="#0a74da" />
+
+    <!-- ✅ Structured Data (Rich Results) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Store",
+        "name": "Ecommerce",
+        "url": "https://www.ecommerce.com/",
+        "logo": "https://www.ecommerce.com/logo.png",
+        "sameAs": [
+          "https://www.facebook.com/ecommerce",
+          "https://www.twitter.com/ecommerce"
+        ]
+      }
+    </script>
+
+    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Preload main stylesheet for speed -->
+    <link rel="preload" href="/src/styles.css" as="style" />
+    <link rel="stylesheet" href="/src/styles.css" />
   </head>
 
   <body>

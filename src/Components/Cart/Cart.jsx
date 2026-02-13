@@ -6,7 +6,7 @@ const Cart = ({ cartItems, setCartItems }) => {
   const navigate = useNavigate();
   const itemCount = cartItems.length;
   
-  // Robust price calculation
+  // Robust price calculation - Optimized for USD
   const totalPrice = cartItems.reduce((acc, item) => {
     const price = typeof item.price === 'string' 
       ? parseFloat(item.price.replace(/[^0-9.]/g, '')) 
@@ -22,11 +22,11 @@ const Cart = ({ cartItems, setCartItems }) => {
   const handleCheckout = () => {
     if (itemCount === 0) return;
     
-    // Simulate a premium processing state
+    // Simulate a premium New York processing state
     const confirmAcquisition = window.confirm('Proceed with the acquisition of these archived objects?');
     if (confirmAcquisition) {
       setCartItems([]);
-      alert('Transmission successful. Your selection has been archived for delivery.');
+      alert('Transmission successful. Your selection has been archived for US delivery.');
       navigate('/shop');
     }
   };
@@ -39,7 +39,7 @@ const Cart = ({ cartItems, setCartItems }) => {
         <header className="mb-20 border-b border-stone-100 pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-4">
             <h2 className="text-[10px] uppercase tracking-[0.6em] text-stone-400 font-bold">
-              Current Manifest
+              Current Manifest / US
             </h2>
             <h1 className="text-4xl sm:text-5xl font-extralight text-stone-900 tracking-tighter leading-none">
               Your <span className="font-serif italic text-stone-400">Collection.</span>
@@ -49,7 +49,7 @@ const Cart = ({ cartItems, setCartItems }) => {
             <p className="text-[10px] uppercase tracking-[0.3em] text-stone-900 font-bold">
               {itemCount.toString().padStart(2, '0')} Objects Queued
             </p>
-            <p className="text-[9px] uppercase tracking-[0.2em] text-stone-300 mt-1 italic">VND-ACC-2026</p>
+            <p className="text-[9px] uppercase tracking-[0.2em] text-stone-300 mt-1 italic font-bold">NY-ARCHIVE-2026</p>
           </div>
         </header>
 
@@ -60,11 +60,11 @@ const Cart = ({ cartItems, setCartItems }) => {
             </div>
             <div className="space-y-2">
               <p className="text-stone-400 font-light italic text-sm">Your archive is currently devoid of selections.</p>
-              <p className="text-[9px] uppercase tracking-[0.4em] text-stone-300">Awaiting your curation</p>
+              <p className="text-[9px] uppercase tracking-[0.4em] text-stone-300">Awaiting your curation in New York</p>
             </div>
             <button 
               onClick={() => navigate('/shop')}
-              className="group text-[10px] uppercase tracking-[0.5em] text-stone-900 border-b border-stone-900 pb-2 hover:text-stone-400 hover:border-stone-400 transition-all duration-500"
+              className="group text-[10px] uppercase tracking-[0.5em] text-stone-900 border-b border-stone-900 pb-2 hover:text-stone-400 hover:border-stone-400 transition-all duration-500 font-bold"
             >
               Return to Gallery
             </button>
@@ -82,32 +82,35 @@ const Cart = ({ cartItems, setCartItems }) => {
                 {cartItems.map((item, index) => (
                   <li key={`${item.id}-${index}`} className="py-8 group flex justify-between items-start gap-4">
                     <div className="flex gap-6 items-start">
-                      {/* Technical Thumbnail */}
-                      <div className="w-20 h-24 bg-stone-50 overflow-hidden flex-shrink-0">
+                      <div className="w-20 h-24 bg-[#fafaf9] overflow-hidden flex-shrink-0 border border-stone-50">
                         <img 
                           src={item.image || item.imageURL} 
                           alt={item.name} 
-                          className="w-full h-full object-contain p-2 mix-blend-multiply opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700 grayscale hover:grayscale-0" 
+                          className="w-full h-full object-contain p-2 mix-blend-multiply transition-all duration-700 group-hover:scale-110 saturate-[1.1] contrast-[1.05]" 
                         />
                       </div>
                       <div className="space-y-2">
                         <h3 className="text-[11px] uppercase tracking-[0.2em] text-stone-900 font-bold group-hover:text-stone-500 transition-colors">
                           {item.name}
                         </h3>
-                        <p className="text-[9px] text-stone-400 uppercase tracking-widest font-light">
-                          REF: {item.id ? item.id.slice(0, 8).toUpperCase() : '00X-TEMP'}
+                        <p className="text-[9px] text-stone-400 uppercase tracking-widest font-mono">
+                          {/* FIXED SLICE ERROR: Wrapped in String() to prevent crash */}
+                          REF: {item.id ? String(item.id).slice(0, 8).toUpperCase() : 'NY-00X-T'}
                         </p>
                         <button 
                           onClick={() => handleRemoveItem(index)}
-                          className="flex items-center gap-2 text-[8px] uppercase tracking-widest text-stone-300 hover:text-red-800 transition-colors pt-4"
+                          className="flex items-center gap-2 text-[8px] uppercase tracking-widest text-stone-300 hover:text-red-900 transition-colors pt-4 font-bold"
                         >
-                          <Trash2 size={10} /> Discard Item
+                          <Trash2 size={10} strokeWidth={2} /> Discard Item
                         </button>
                       </div>
                     </div>
                     
-                    <span className="text-xs font-light text-stone-900 tracking-tight">
-                      {typeof item.price === 'number' ? `₦${item.price.toLocaleString()}` : item.price}
+                    <span className="text-xs font-black text-stone-900 tracking-tight">
+                      {/* USD FORMATTING */}
+                      {typeof item.price === 'number' 
+                        ? `$${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}` 
+                        : item.price}
                     </span>
                   </li>
                 ))}
@@ -116,19 +119,21 @@ const Cart = ({ cartItems, setCartItems }) => {
 
             {/* Acquisition Summary Sidebar */}
             <div className="lg:col-span-5">
-              <div className="bg-stone-50 p-8 lg:p-12 space-y-10 sticky top-32">
+              <div className="bg-stone-50 p-8 lg:p-12 space-y-10 sticky top-32 border border-stone-100 shadow-sm">
                 <div className="space-y-6">
                   <h4 className="text-[10px] uppercase tracking-[0.5em] text-stone-900 font-bold border-b border-stone-200 pb-4">
                     Summary of Acquisition
                   </h4>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center text-[10px] uppercase tracking-widest">
-                      <span className="text-stone-400">Subtotal</span>
-                      <span className="text-stone-900 font-medium">₦{totalPrice.toLocaleString()}</span>
+                      <span className="text-stone-400">Subtotal (USD)</span>
+                      <span className="text-stone-900 font-bold">
+                        ${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center text-[10px] uppercase tracking-widest">
                       <span className="text-stone-400">Archival Logistics</span>
-                      <span className="text-stone-900 font-medium italic">Calculated at Step II</span>
+                      <span className="text-stone-900 font-bold italic">Step II Selection</span>
                     </div>
                   </div>
                 </div>
@@ -136,31 +141,31 @@ const Cart = ({ cartItems, setCartItems }) => {
                 <div className="pt-6 border-t border-stone-200">
                   <div className="flex justify-between items-baseline mb-8">
                     <span className="text-[10px] uppercase tracking-[0.4em] text-stone-900 font-bold">Total Valuation</span>
-                    <span className="text-2xl font-extralight text-stone-900 tracking-tighter">
-                      ₦{totalPrice.toLocaleString()}
+                    <span className="text-2xl font-black text-stone-900 tracking-tighter">
+                      ${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
 
                   <div className="bg-stone-100 p-4 mb-8">
                     <div className="flex gap-3 items-start">
-                      <Package size={14} className="text-stone-400 mt-0.5" strokeWidth={1} />
-                      <p className="text-[9px] text-stone-500 uppercase tracking-widest leading-relaxed">
-                        Authorized Vendo Archive shipments include certificates of authenticity and technical specs.
+                      <Package size={14} className="text-stone-400 mt-0.5" strokeWidth={1.5} />
+                      <p className="text-[9px] text-stone-500 uppercase tracking-widest leading-relaxed font-bold">
+                        Authorized Vendo Archive shipments include certificates of authenticity. US Domestic shipping available.
                       </p>
                     </div>
                   </div>
 
                   <button
                     onClick={handleCheckout}
-                    className="group w-full bg-stone-950 text-white py-6 flex items-center justify-center gap-4 hover:bg-stone-800 transition-all duration-700 shadow-xl shadow-stone-100"
+                    className="group w-full bg-stone-950 text-white py-6 flex items-center justify-center gap-4 hover:bg-stone-800 transition-all duration-700 shadow-xl shadow-stone-200"
                   >
                     <span className="text-[10px] uppercase tracking-[0.5em] font-bold">Initiate Acquisition</span>
-                    <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform duration-500" />
+                    <ArrowRight size={14} strokeWidth={2} className="group-hover:translate-x-2 transition-transform duration-500" />
                   </button>
                   
                   <div className="mt-8 text-center">
-                    <p className="text-[8px] uppercase tracking-[0.3em] text-stone-300">
-                      SECURE 256-BIT ENCRYPTED TRANSMISSION
+                    <p className="text-[8px] uppercase tracking-[0.3em] text-stone-300 font-bold">
+                      SECURE 256-BIT ENCRYPTED TRANSMISSION — NYC
                     </p>
                   </div>
                 </div>

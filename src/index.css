@@ -1,13 +1,31 @@
+/* 1. Kill the browser defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 2. Force the screen to be full width and prevent "Ghost Margins" */
+html, body, #root {
+  width: 100vw !important;
+  min-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden;
+  background-color: #0c0a09; /* Matches stone-950 */
+}
+
+/* 3. VITE/CRA FIX: Disable the centered layout that usually ships with React templates */
+#root {
+  display: block !important; /* This stops the 'centering' effect */
+  max-width: none !important; /* Removes any 1280px constraints */
+}
+
+/* 4. Smooth scrolling and fonts */
+html {
+  scroll-behavior: smooth;
+}
 
 .navbar {
   font-family: 'Poppins', sans-serif;
-}
-html, body {
-  overflow-x: hidden;  
-  margin: 0;           
-  padding: 0;          
-}
-
-html {
-  scroll-behavior: smooth;
 }

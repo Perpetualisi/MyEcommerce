@@ -2,89 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <!-- Viewport for mobile -->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <link rel="icon" type="image/png" href="/favicon.png?v=1" />
 
-    <!-- Favicon -->
-<link rel="icon" type="image/png" href="/favicon.png?v=1" />
+    <title>Vendo Archive | Curated Modern Essentials</title>
 
-    <!-- Title (Google & Browser Tab) -->
-    <title>Ecommerce - Shop Stylish & Affordable Products Online</title>
+    <meta name="description" content="A curated archive of creativity, technology, and intentional design. Shop Vendo Archive for premium essentials." />
+    <meta name="keywords" content="Vendo Archive, minimalist fashion, tech gadgets, intentional design" />
+    <meta name="author" content="Vendo Team" />
 
-    <!-- ✅ SEO Meta Tags -->
-    <meta
-      name="description"
-      content="Discover stylish and affordable products at Ecommerce. Shop clothing, accessories, and tech gadgets with fast delivery and secure payment."
-    />
-    <meta
-      name="keywords"
-      content="Ecommerce, online store, affordable fashion, gadgets, accessories, Nigeria shopping"
-    />
-    <meta name="author" content="Ecommerce Team" />
-    <link rel="canonical" href="https://www.ecommerce.com/" />
+    <style>
+      /* This is the magic fix for the white edges */
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: 100%;
+        overflow-x: hidden; /* Prevents tiny horizontal scrollbars */
+        background-color: #0c0a09; /* Forces the background to be stone-950 immediately */
+      }
+      #root {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
 
-    <!-- ✅ Open Graph (Facebook, LinkedIn, WhatsApp) -->
-    <meta property="og:title" content="Ecommerce - Shop Stylish & Affordable Products Online" />
-    <meta
-      property="og:description"
-      content="Affordable, stylish, and modern shopping experience. Discover our latest collection today!"
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.ecommerce.com/" />
-    <meta property="og:image" content="https://www.ecommerce.com/social-image.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap" rel="stylesheet" />
 
-    <!-- ✅ Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Ecommerce - Shop Stylish & Affordable Products Online" />
-    <meta
-      name="twitter:description"
-      content="Discover affordable and stylish products at Ecommerce. Shop now with secure payments!"
-    />
-    <meta name="twitter:image" content="https://www.ecommerce.com/social-image.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- 🌍 Geo & Mobile SEO -->
-    <meta name="geo.region" content="NG" />
-    <meta name="geo.country" content="Nigeria" />
-    <meta name="distribution" content="global" />
-
-    <!-- 🎨 Browser Theme -->
-    <meta name="theme-color" content="#0a74da" />
-
-    <!-- ✅ Structured Data (Rich Results) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Store",
-        "name": "Ecommerce",
-        "url": "https://www.ecommerce.com/",
-        "logo": "https://www.ecommerce.com/logo.png",
-        "sameAs": [
-          "https://www.facebook.com/ecommerce",
-          "https://www.twitter.com/ecommerce"
-        ]
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'], // Switched to a cleaner minimalist font
+            },
+            colors: {
+              // Your Archive Colors
+              stone: {
+                50: '#fafaf9',
+                100: '#f5f5f4',
+                200: '#e7e5e4',
+                400: '#a8a29e',
+                500: '#78716c',
+                800: '#292524',
+                900: '#1c1917',
+                950: '#0c0a09',
+              }
+            }
+          }
+        }
       }
     </script>
-
-    <!-- Google Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Preload main stylesheet for speed -->
-    <link rel="preload" href="/src/styles.css" as="style" />
-    <link rel="stylesheet" href="/src/styles.css" />
   </head>
 
-  <body>
-    <!-- React App Root -->
+  <body class="bg-stone-950 m-0 p-0">
     <div id="root"></div>
 
-    <!-- React Main Script -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

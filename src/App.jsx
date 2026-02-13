@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react'; 
+
+// Components
 import Navbar from './Components/Navbar/Navbar';
 import Hero from './Components/Hero/Hero';
 import FeaturedProducts from './Components/featuredProducts/featuredProducts';
@@ -16,20 +18,30 @@ import SearchResults from './Components/SearchResults';
 import Cart from './Components/Cart/Cart';
 import ShopPage from './Components/ShopPage/ShopPage';
 import ProductDetail from './Components/ProductDetail'; 
+
 import './App.css'; 
 
 /**
+ * ScrollToTop Component
+ * Ensures that whenever the route changes, the window scrolls to the top.
+ */
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+/**
  * NavigationGuard Component
- * Renders a "Return to Home" link on all pages except the landing page.
  */
 const NavigationGuard = () => {
   const location = useLocation();
-  
-  // Do not show the back button if we are on the Home page
   if (location.pathname === '/') return null;
 
   return (
-    <div className="w-full bg-stone-50">
+    <div className="w-full bg-white border-b border-stone-50">
       <div className="max-w-7xl mx-auto px-8 pt-32 pb-8">
         <Link 
           to="/" 
@@ -46,19 +58,29 @@ const NavigationGuard = () => {
 };
 
 const App = () => {
-  const [cart, setCart] = useState([]); 
+  // Initialize cart from LocalStorage if available
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('archive_cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  // Sync cart to LocalStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('archive_cart', JSON.stringify(cart));
+  }, [cart]);
 
   const handleAddToCart = (product) => {
-    setCart((prevCart) => [...prevCart, product]);
+    setCart((prevCart) => [...prevCart, { ...product, cartId: Date.now() }]);
   };
 
   const allProducts = [
+    // --- CORE ARCHIVE ---
     { id: 1, category: 'Electronics', name: 'Samsung Galaxy Tab', price: '349', image: '/electronics/samsungtab.jpg' },
     { id: 2, category: 'Electronics', name: 'Apple iPhone 15', price: '999', image: '/electronics/AppleiPhone15.jpg' },
     { id: 3, category: 'Electronics', name: 'Sony Headphones', price: '199', image: '/electronics/sonyheadphone.jpg' },
     { id: 4, category: 'Electronics', name: 'LG 4K TV', price: '799', image: '/electronics/LG4KTV.jpg' },
     { id: 5, category: 'Electronics', name: 'Apple MacBook Pro', price: '2399', image: '/electronics/AppleMacBookPro.jpg' },
-    { id: 6, category: 'Fashion', name: 'Levi\'s Jeans', price: '59', image: '/fashion/LeviJeans.jpg' },
+    { id: 6, category: 'Fashion', name: "Levi's Jeans", price: '59', image: '/fashion/LeviJeans.jpg' },
     { id: 7, category: 'Fashion', name: 'Nike Sneakers', price: '120', image: '/fashion/NikeSneakers.jpg' },
     { id: 8, category: 'Fashion', name: 'Adidas Hoodie', price: '55', image: '/fashion/AdidasHoodie.jpg' },
     { id: 9, category: 'Fashion', name: 'Gucci Watch', price: '800', image: '/fashion/GucciWatch.jpg' },
@@ -73,16 +95,28 @@ const App = () => {
     { id: 18, category: 'Furniture', name: 'Office Chair', price: '129', image: '/Furniture/chair.jpg' },
     { id: 19, category: 'Furniture', name: 'Queen Size Bed', price: '1199', image: '/Furniture/bed.jpg' },
     { id: 20, category: 'Furniture', name: 'Bookshelf', price: '199', image: '/Furniture/bookshef.jpg' },
+
+    // --- REFINED ADDITIONS (High-Performance CDN) ---
+    { id: 21, category: 'Electronics', name: 'Alpha Mirrorless Camera', price: '2100', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=1200' },
+    { id: 22, category: 'Electronics', name: 'Studio Monitoring Headphones', price: '299', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1200' },
+    { id: 23, category: 'Fashion', name: 'Minimalist Leather Watch', price: '185', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1200' },
+    { id: 24, category: 'Furniture', name: 'Sculptural Accent Chair', price: '850', image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=1200' },
+    { id: 25, category: 'Electronics', name: 'Concrete Smart Speaker', price: '129', image: 'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?auto=format&fit=crop&q=80&w=1200' },
+    { id: 26, category: 'Fashion', name: 'Ivory Knit Sweater', price: '110', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=80&w=1200' },
+    { id: 27, category: 'Furniture', name: 'Oak Side Table', price: '240', image: 'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&q=80&w=1200' },
+    { id: 28, category: 'Electronics', name: 'Ultra-Wide Workstation', price: '1400', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=1200' },
+    { id: 29, category: 'Groceries', name: 'Cold Pressed Olive Oil', price: '38', image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=1200' },
+    { id: 30, category: 'Fashion', name: 'Classic Leather Tote', price: '320', image: 'https://images.unsplash.com/photo-1547949003-9792a18a2601?auto=format&fit=crop&q=80&w=1200' },
+    { id: 31, category: 'Furniture', name: 'Bauhaus Desk Lamp', price: '155', image: 'https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&q=80&w=1200' },
+    { id: 32, category: 'Groceries', name: 'Whole Bean Dark Roast', price: '26', image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=1200' }
   ];
 
   return (
     <Router>
-      <div className="bg-stone-50 min-h-screen font-sans antialiased text-stone-900 overflow-x-hidden"> 
+      <ScrollToTop />
+      <div className="bg-white min-h-screen font-sans antialiased text-stone-900 selection:bg-stone-900 selection:text-white overflow-x-hidden"> 
         
-        {/* Navigation Bar */}
         <Navbar cartItemCount={cart.length} />
-        
-        {/* Conditional "Back Home" Link */}
         <NavigationGuard />
         
         <Routes>
@@ -104,7 +138,6 @@ const App = () => {
             }
           />
 
-          {/* Sub Pages */}
           <Route path="/about" element={<About />} />
           <Route path="/featured" element={<FeaturedProducts onAddToCart={handleAddToCart} />} />
           <Route path="/categories" element={<Categories />} />

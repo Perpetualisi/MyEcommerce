@@ -35,7 +35,7 @@ const Contact = () => {
         <div className="space-y-12 animate-in fade-in slide-in-from-left-6 duration-1000">
           <header>
             <h2 className="text-[10px] uppercase tracking-[0.6em] text-stone-400 mb-6 font-bold">
-              Communication Archive
+              Communication Archive / US
             </h2>
             <h1 className="text-4xl sm:text-6xl font-extralight text-stone-900 tracking-tighter leading-[1.1]">
               Initiate a <br />
@@ -45,24 +45,25 @@ const Contact = () => {
 
           <div className="space-y-8 max-w-sm">
             <p className="text-stone-500 text-sm leading-relaxed font-light tracking-wide">
-              Whether you are inquiring about a specific gadget, tracking an artisan pantry shipment, or seeking interior consultation, our team is available for assistance.
+              Whether you are inquiring about a specific gadget, tracking an artisan pantry shipment, or seeking interior consultation, our US-based team is available for global assistance.
             </p>
             
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-4 group">
                 <Globe size={14} className="text-stone-300 group-hover:text-stone-900 transition-colors" />
-                <span className="text-[10px] uppercase tracking-[0.3em] text-stone-900">Global Assistance Available</span>
+                <span className="text-[10px] uppercase tracking-[0.3em] text-stone-900 font-bold">Domestic & Global Support</span>
               </div>
               <div className="flex items-center gap-4 group">
                 <Clock3 size={14} className="text-stone-300 group-hover:text-stone-900 transition-colors" />
-                <span className="text-[10px] uppercase tracking-[0.3em] text-stone-900">GMT+1 Response Protocol</span>
+                {/* Updated to US Timezone */}
+                <span className="text-[10px] uppercase tracking-[0.3em] text-stone-900 font-bold">EST Response Protocol</span>
               </div>
             </div>
           </div>
         </div>
 
         <div className="mt-20 lg:mt-0">
-          <p className="text-[8px] uppercase tracking-[0.5em] text-stone-300">EST. MMXXVI — VENDO CURATION</p>
+          <p className="text-[8px] uppercase tracking-[0.5em] text-stone-300">EST. MMXXVI — VENDO CURATION USA</p>
         </div>
       </div>
 
@@ -75,11 +76,11 @@ const Contact = () => {
               <CheckCircle2 size={48} strokeWidth={1} className="mx-auto text-stone-900" />
               <div className="space-y-2">
                 <h3 className="text-[11px] uppercase tracking-[0.5em] font-bold text-stone-900">Transmission Successful</h3>
-                <p className="text-xs text-stone-500 font-light tracking-widest uppercase">Your inquiry has been archived and queued for review.</p>
+                <p className="text-xs text-stone-500 font-light tracking-widest uppercase">Your inquiry has been archived in our New York hub.</p>
               </div>
               <button 
                 onClick={() => setIsSent(false)}
-                className="text-[9px] uppercase tracking-[0.4em] text-stone-400 hover:text-stone-900 transition-colors pt-8"
+                className="text-[9px] uppercase tracking-[0.4em] text-stone-400 hover:text-stone-900 transition-colors pt-8 font-bold"
               >
                 Send another message
               </button>
@@ -89,7 +90,7 @@ const Contact = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {/* Name */}
                 <div className="relative border-b border-stone-100 pb-2 group focus-within:border-stone-900 transition-all duration-500">
-                  <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3">Full Identity</label>
+                  <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 font-bold">Full Identity</label>
                   <input
                     type="text"
                     name="name"
@@ -102,7 +103,7 @@ const Contact = () => {
                 </div>
                 {/* Email */}
                 <div className="relative border-b border-stone-100 pb-2 group focus-within:border-stone-900 transition-all duration-500">
-                  <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3">Electronic Mail</label>
+                  <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 font-bold">Electronic Mail</label>
                   <input
                     type="email"
                     name="email"
@@ -117,14 +118,14 @@ const Contact = () => {
 
               {/* Subject Selector */}
               <div className="space-y-4">
-                <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block">Archive Department</label>
+                <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block font-bold">Archive Department</label>
                 <div className="flex flex-wrap gap-3">
                   {categories.map((cat) => (
                     <button
                       key={cat}
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, category: cat }))}
-                      className={`px-4 py-2 text-[9px] uppercase tracking-widest border transition-all duration-500 ${
+                      className={`px-4 py-2 text-[9px] uppercase tracking-widest border transition-all duration-500 font-bold ${
                         formData.category === cat 
                         ? 'bg-stone-900 border-stone-900 text-white' 
                         : 'border-stone-100 text-stone-400 hover:border-stone-300'
@@ -138,12 +139,12 @@ const Contact = () => {
 
               {/* Message */}
               <div className="relative border-b border-stone-100 pb-2 group focus-within:border-stone-900 transition-all duration-500">
-                <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3">Inquiry Details</label>
+                <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 font-bold">Inquiry Details</label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  placeholder="PROVIDE SUFFICIENT DETAIL FOR OUR TEAM"
+                  placeholder="PROVIDE SUFFICIENT DETAIL FOR OUR US TEAM"
                   className="w-full bg-transparent text-[12px] tracking-[0.1em] text-stone-900 outline-none placeholder:text-stone-100 min-h-[120px] resize-none"
                   required
                 />
@@ -152,11 +153,11 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="group w-full flex items-center justify-between px-10 py-6 bg-stone-950 text-white text-[10px] uppercase tracking-[0.4em] hover:bg-stone-800 disabled:bg-stone-100 disabled:text-stone-400 transition-all duration-700 shadow-2xl shadow-stone-200"
+                className="group w-full flex items-center justify-between px-10 py-6 bg-stone-950 text-white text-[10px] uppercase tracking-[0.4em] font-bold hover:bg-stone-800 disabled:bg-stone-100 disabled:text-stone-400 transition-all duration-700 shadow-2xl shadow-stone-200"
               >
                 {isSubmitting ? (
                   <span className="flex items-center gap-4 italic lowercase tracking-normal">
-                    Establishing Secure Link <Loader2 size={14} className="animate-spin" />
+                    Syncing with US Hub <Loader2 size={14} className="animate-spin" />
                   </span>
                 ) : (
                   <>
@@ -169,16 +170,16 @@ const Contact = () => {
           )}
 
           <div className="mt-20 grid grid-cols-2 gap-8 text-[9px] uppercase tracking-[0.3em] text-stone-400">
-             <div>
-                <p className="mb-2 text-stone-900 font-bold">Lagos Hub</p>
-                <p>22 Victoria Island</p>
-                <p>Digital Archive — 101241</p>
-             </div>
-             <div className="text-right">
+              <div>
+                <p className="mb-2 text-stone-900 font-bold underline underline-offset-4">New York HQ</p>
+                <p>401 Broadway, Suite 22</p>
+                <p>SoHo, NY — 10013</p>
+              </div>
+              <div className="text-right">
                 <p className="mb-2 text-stone-900 font-bold">Social Archive</p>
                 <p className="hover:text-stone-900 cursor-pointer">Instagram</p>
                 <p className="hover:text-stone-900 cursor-pointer">Pinterest</p>
-             </div>
+              </div>
           </div>
         </div>
       </div>

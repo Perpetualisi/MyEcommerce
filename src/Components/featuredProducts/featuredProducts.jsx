@@ -22,7 +22,6 @@ const FeaturedProducts = ({ onAddToCart }) => {
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
-        // Slight delay for a smoother transition
         setTimeout(() => setLoading(false), 800);
       }
     };
@@ -38,7 +37,7 @@ const FeaturedProducts = ({ onAddToCart }) => {
           <div className="absolute inset-0 blur-xl bg-stone-200/50 -z-10 animate-pulse" />
         </div>
         <div className="text-center">
-          <p className="text-[10px] uppercase tracking-[0.5em] text-stone-500 font-light">Retrieving Archive</p>
+          <p className="text-[10px] uppercase tracking-[0.5em] text-stone-500 font-bold">Retrieving Archive</p>
           <p className="text-[8px] uppercase tracking-[0.3em] text-stone-300 mt-2 italic">Establishing secure connection...</p>
         </div>
       </div>
@@ -57,14 +56,14 @@ const FeaturedProducts = ({ onAddToCart }) => {
               Selected Works
             </h2>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extralight text-stone-900 tracking-tighter leading-none">
+          <h1 className="text-4xl sm:text-6xl font-light text-stone-900 tracking-tighter leading-none">
             Featured <br />
             <span className="font-serif italic text-stone-400 font-normal">Selection.</span>
           </h1>
         </div>
         
-        <p className="max-w-xs text-[11px] uppercase tracking-widest text-stone-400 leading-relaxed font-light">
-          A curated sequence of functional objects, tech essentials, and pantry staples designed for the modern 2026 archive.
+        <p className="max-w-xs text-[11px] uppercase tracking-widest text-stone-400 leading-relaxed font-normal">
+          A high-definition sequence of functional objects and tech essentials. Globally available in USD.
         </p>
       </div>
 
@@ -76,36 +75,37 @@ const FeaturedProducts = ({ onAddToCart }) => {
             {/* Image Stage */}
             <div 
               onClick={() => navigate(`/product/${product.id}`)}
-              className="relative h-[450px] w-full overflow-hidden bg-[#fafaf9] cursor-pointer group-hover:shadow-2xl group-hover:shadow-stone-100 transition-all duration-700 ease-in-out"
+              className="relative h-[450px] w-full overflow-hidden bg-[#f9f9f9] cursor-pointer border border-stone-50 group-hover:shadow-2xl group-hover:shadow-stone-100 transition-all duration-700 ease-in-out"
             >
               <img
                 src={product.imageURL}
                 alt={product.name}
-                className="w-full h-full object-contain p-12 transition-all duration-[1.5s] ease-out group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0"
+                /* SHARP COLOR: Removed grayscale, added saturate and contrast */
+                className="w-full h-full object-contain p-12 transition-all duration-[1.5s] ease-out group-hover:scale-110 saturate-[1.1] contrast-[1.05]"
               />
               
               {/* Badge: Category */}
               <div className="absolute top-6 left-6 flex items-center gap-2">
-                <span className="text-[8px] uppercase tracking-[0.4em] text-stone-400 bg-white/80 backdrop-blur-md px-3 py-1.5 border border-stone-100">
+                <span className="text-[8px] uppercase tracking-[0.4em] text-stone-900 bg-white/90 backdrop-blur-md px-3 py-1.5 border border-stone-100 font-bold">
                   {product.category || "Item"}
                 </span>
               </div>
 
               {/* View Details Link (Top Right) */}
               <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <ArrowUpRight size={18} strokeWidth={1} className="text-stone-400" />
+                <ArrowUpRight size={18} strokeWidth={1.5} className="text-stone-900" />
               </div>
 
               {/* Quick Action Overlay */}
-              <div className="absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/5 transition-all duration-700 flex items-end p-6">
+              <div className="absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/[0.02] transition-all duration-700 flex items-end p-6">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onAddToCart(product);
                   }}
-                  className="w-full bg-stone-900 text-white py-4 text-[10px] uppercase tracking-[0.4em] opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out hover:bg-stone-800 flex items-center justify-center gap-3"
+                  className="w-full bg-stone-900 text-white py-4 text-[10px] uppercase tracking-[0.4em] font-bold opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out hover:bg-stone-800 flex items-center justify-center gap-3 shadow-xl"
                 >
-                  <Plus size={14} /> Add to Collection
+                  <Plus size={14} strokeWidth={2} /> Add to Bag
                 </button>
               </div>
             </div>
@@ -114,22 +114,26 @@ const FeaturedProducts = ({ onAddToCart }) => {
             <div className="mt-8 space-y-3">
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <h3 className="text-[12px] font-bold text-stone-900 tracking-[0.2em] uppercase leading-tight">
+                  <h3 className="text-[12px] font-black text-stone-900 tracking-tight uppercase leading-tight">
                     {product.name}
                   </h3>
-                  <p className="text-[10px] text-stone-400 uppercase tracking-widest font-light">
-                    Ref: {product.id.slice(0, 8).toUpperCase()}
+                  <p className="text-[10px] text-stone-400 uppercase tracking-widest font-mono">
+                    Ref: {product.id ? String(product.id).slice(0, 8).toUpperCase() : '000-X'}
                   </p>
                 </div>
-                <p className="text-sm font-light text-stone-900 tracking-tight">
-                  {product.price ? `₦${Number(product.price).toLocaleString()}` : "Inquiry"}
+                {/* CURRENCY UPDATE: Dollars with US formatting */}
+                <p className="text-sm font-black text-stone-900 tracking-tight">
+                  {product.price ? `$${Number(product.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}` : "Inquiry"}
                 </p>
               </div>
               
               {/* Decorative detail */}
-              <div className="pt-4 border-t border-stone-50 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                 <span className="text-[9px] uppercase tracking-widest text-stone-300">Limited Archive</span>
-                 <div className="h-[2px] w-2 bg-stone-200 rounded-full" />
+              <div className="pt-4 border-t border-stone-100 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                 <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-stone-900 rounded-full" />
+                    <span className="text-[9px] uppercase tracking-widest text-stone-500 font-bold">Verified Entry</span>
+                 </div>
+                 <span className="text-[8px] uppercase tracking-widest text-stone-300 italic">2026 Registry</span>
               </div>
             </div>
           </div>
@@ -140,7 +144,7 @@ const FeaturedProducts = ({ onAddToCart }) => {
       <div className="mt-32 text-center border-t border-stone-100 pt-20">
         <button 
           onClick={() => navigate('/shop')}
-          className="group text-[11px] uppercase tracking-[0.5em] text-stone-400 hover:text-stone-900 transition-all duration-500"
+          className="group text-[11px] uppercase tracking-[0.5em] text-stone-400 hover:text-stone-900 transition-all duration-500 font-bold"
         >
           View Full Archive 
           <span className="inline-block ml-4 group-hover:translate-x-2 transition-transform duration-500">→</span>

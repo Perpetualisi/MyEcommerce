@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const images = [
   "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=2000&auto=format&fit=crop", // Furniture/Interior
   "https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=2000&auto=format&fit=crop", // Electronics/Tech
-  "https://images.unsplash.com/photo-1476224203421-9ac39bdd3327?q=80&w=2000&auto=format&fit=crop", // Gourmet Food/Groceries
+  "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2000&auto=format&fit=crop", // Artisan food
   "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2000&auto=format&fit=crop", // Fashion/Retail
   "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?q=80&w=2000&auto=format&fit=crop", // Modern Gadgets
 ];

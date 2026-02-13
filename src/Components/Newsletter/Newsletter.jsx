@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ArrowRight, Check } from 'lucide-react';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
@@ -13,52 +14,71 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="mt-24 px-8 sm:px-16 lg:px-24 py-20 bg-stone-950 border-t border-b border-stone-900">
-      <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+    <section className="bg-white px-8 sm:px-16 lg:px-24 py-32 border-t border-stone-100">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start justify-between gap-16 lg:gap-24">
         
-        {/* Text Content - Dull Ash Tones */}
-        <div className="flex-1 text-left">
-          <h2 className="text-[10px] uppercase tracking-[0.5em] text-stone-500 mb-4">
-            The Digest
+        {/* Text Content */}
+        <div className="flex-1 text-left animate-in fade-in duration-1000">
+          <h2 className="text-[10px] uppercase tracking-[0.5em] text-stone-400 mb-6 font-medium">
+            Correspondence
           </h2>
-          <h3 className="text-2xl sm:text-3xl font-light text-stone-300 tracking-tight leading-tight">
-            Stay in the <span className="italic text-stone-500">Archive.</span>
+          <h3 className="text-3xl sm:text-4xl font-light text-stone-900 tracking-tight leading-[1.2]">
+            Join the <br />
+            <span className="italic text-stone-400">Vendo Archive.</span>
           </h3>
-          <p className="mt-4 text-stone-500 text-xs sm:text-sm font-light tracking-wide max-w-xs">
-            Subscribe to receive curated updates, exclusive arrivals, and modern insights.
+          <p className="mt-6 text-stone-500 text-xs sm:text-sm font-light tracking-wide max-w-xs leading-relaxed">
+            Receive curated notifications regarding new arrivals, seasonal edits, and private archive sales.
           </p>
         </div>
 
         {/* Form Layer */}
-        <div className="w-full md:w-auto flex-1 max-w-md">
+        <div className="w-full md:w-auto flex-1 max-w-md pt-4">
           {isSubscribed ? (
-            <div className="flex items-center gap-4 text-stone-400 animate-pulse">
-              <div className="w-8 h-px bg-stone-600" />
-              <p className="text-[10px] uppercase tracking-widest">Subscription Confirmed</p>
+            <div className="flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-700">
+              <div className="flex items-center gap-3 text-stone-900">
+                <div className="w-8 h-8 rounded-full border border-stone-100 flex items-center justify-center">
+                  <Check size={14} strokeWidth={1.5} />
+                </div>
+                <p className="text-[10px] uppercase tracking-[0.3em] font-medium">Access Granted</p>
+              </div>
+              <p className="text-[10px] text-stone-400 uppercase tracking-widest leading-relaxed">
+                Check your inbox for a welcome transmission.
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="relative group">
-              <input
-                type="email"
-                placeholder="EMAIL ADDRESS"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full bg-transparent border-b border-stone-800 p-4 pb-2 text-[10px] uppercase tracking-[0.2em] text-stone-300 outline-none transition-colors focus:border-stone-500 placeholder:text-stone-700"
-              />
-              <button
-                type="submit"
-                className="absolute right-0 bottom-2 text-stone-500 hover:text-stone-200 text-[10px] uppercase tracking-[0.3em] transition-all duration-500 flex items-center gap-2"
-              >
-                Join
-                <div className="w-4 h-px bg-stone-700 group-hover:w-8 transition-all" />
-              </button>
+              <div className="relative border-b border-stone-200 pb-2 transition-all duration-700 focus-within:border-stone-900">
+                <input
+                  type="email"
+                  placeholder="ENTER EMAIL ADDRESS"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full bg-transparent p-2 pl-0 text-[11px] uppercase tracking-[0.25em] text-stone-900 outline-none placeholder:text-stone-200 transition-all"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-0 bottom-2 text-stone-400 hover:text-stone-900 transition-all duration-500 flex items-center gap-3 group/btn"
+                >
+                  <span className="text-[9px] uppercase tracking-[0.4em]">Submit</span>
+                  <ArrowRight size={14} strokeWidth={1.5} className="group-hover/btn:translate-x-1 transition-transform" />
+                </button>
+              </div>
+              
+              <div className="mt-8 space-y-4">
+                <p className="text-[8px] text-stone-300 uppercase tracking-[0.2em] leading-relaxed">
+                  By joining, you consent to our <span className="text-stone-500 underline underline-offset-4 cursor-pointer hover:text-stone-900 transition-colors">Digital Privacy Terms</span>.
+                </p>
+                
+                {/* Visual Status Indicator */}
+                <div className="flex gap-1">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-[1px] w-4 bg-stone-100 group-focus-within:bg-stone-200 transition-colors duration-1000" />
+                  ))}
+                </div>
+              </div>
             </form>
           )}
-          <p className="mt-6 text-[8px] text-stone-700 uppercase tracking-widest leading-relaxed">
-            By subscribing, you agree to our <span className="underline cursor-pointer">Privacy Policy</span>. 
-            No spam, only curated content.
-          </p>
         </div>
 
       </div>

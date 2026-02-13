@@ -30,29 +30,32 @@ const Navbar = ({ cartItemCount = 0 }) => {
     }
   };
 
+  // Re-added About and Contact to the navigation array
   const navLinks = [
     { name: 'Home', path: '/' },
+    { name: 'Shop', path: '/shop' },
     { name: 'Featured', path: '/featured' },
     { name: 'Offers', path: '/offers' },
-    { name: 'Shop', path: '/categories' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' },
   ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-stone-50/90 backdrop-blur-sm border-b border-stone-200">
       <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
         
-        {/* Logo - Softened from blue to a deep stone gray */}
+        {/* Logo */}
         <Link to="/" className="text-xl font-light tracking-[0.2em] text-stone-800">
           VENDO
         </Link>
 
-        {/* Desktop Navigation - Muted text with subtle hover */}
-        <div className="hidden md:flex items-center gap-10">
+        {/* Desktop Navigation - Reduced gap from 10 to 6/8 to accommodate more links */}
+        <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link 
               key={link.path} 
               to={link.path} 
-              className="text-xs uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors duration-300"
+              className="text-[10px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors duration-300"
             >
               {link.name}
             </Link>
@@ -64,7 +67,6 @@ const Navbar = ({ cartItemCount = 0 }) => {
           <button
             onClick={() => setIsSearchOpen(true)}
             className="p-2 text-stone-600 hover:text-stone-900 transition-colors"
-            aria-label="Search"
           >
             <Search size={18} strokeWidth={1.5} />
           </button>
@@ -78,13 +80,6 @@ const Navbar = ({ cartItemCount = 0 }) => {
             )}
           </Link>
 
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-stone-600"
-          >
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-
           {/* Account Dropdown */}
           <div className="hidden md:block relative">
             <button 
@@ -96,18 +91,26 @@ const Navbar = ({ cartItemCount = 0 }) => {
             </button>
             
             {isAccountOpen && (
-              <div className="absolute right-0 mt-2 w-44 bg-stone-50 border border-stone-200 rounded-sm shadow-sm py-2 animate-in fade-in slide-in-from-top-1">
+              <div className="absolute right-0 mt-2 w-44 bg-stone-50 border border-stone-200 rounded-sm shadow-sm py-2">
                 <Link to="/login" className="block px-4 py-2 text-xs uppercase tracking-widest text-stone-600 hover:bg-stone-100">Login</Link>
                 <Link to="/signup" className="block px-4 py-2 text-xs uppercase tracking-widest text-stone-600 hover:bg-stone-100">Sign Up</Link>
               </div>
             )}
           </div>
+
+          {/* Mobile Toggle */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="lg:hidden p-2 text-stone-600"
+          >
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu - Muted Slide-down */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-stone-50 border-b border-stone-200 py-6 px-8 space-y-6">
+        <div className="lg:hidden bg-stone-50 border-b border-stone-200 py-6 px-8 space-y-6">
           {navLinks.map((link) => (
             <Link 
               key={link.path} 
@@ -125,7 +128,7 @@ const Navbar = ({ cartItemCount = 0 }) => {
         </div>
       )}
 
-      {/* Search Overlay - Using the same matte aesthetic */}
+      {/* Search Overlay */}
       {isSearchOpen && (
         <div className="fixed inset-0 bg-stone-900/20 backdrop-blur-sm z-[100] flex items-start justify-center pt-24 px-6">
           <div className="bg-stone-50 w-full max-w-xl border border-stone-200 p-6 animate-in fade-in zoom-in duration-500">

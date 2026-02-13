@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth } from '../../Firebase'; 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom'; 
-import { Loader2, Eye, EyeOff, ChevronRight } from 'lucide-react';
+import { Loader2, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -35,52 +35,50 @@ const SignUp = () => {
         'auth/email-already-in-use': 'This identity is already archived. Try logging in.',
         'auth/invalid-email': 'The email format is unrecognized.',
         'auth/weak-password': 'The security key is too weak.',
-        'auth/network-request-failed': 'Connection lost. Check your signal.',
       };
       setError(errorMap[err.code] || "Registration failed. Please verify your details."); 
     }
   };
 
   return (
-    <section className="min-h-screen bg-stone-950 flex flex-col md:flex-row overflow-hidden">
+    <section className="min-h-screen bg-white flex flex-col md:flex-row overflow-hidden">
       
       {/* Form Side */}
-      <div className="flex-1 flex items-center justify-center px-8 sm:px-16 lg:px-24 py-20 order-2 md:order-1">
-        <div className="w-full max-w-xl">
+      <div className="flex-1 flex items-center justify-center px-8 sm:px-16 lg:px-24 py-20 bg-white">
+        <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <header className="mb-12">
-            <h2 className="text-[10px] uppercase tracking-[0.5em] text-stone-600 mb-4 font-medium">Archive Membership</h2>
-            {/* Title on a straight line */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extralight text-stone-300 tracking-tight whitespace-nowrap">
-              Create your <span className="italic text-stone-500 font-normal">Identity.</span>
+            <h2 className="text-[10px] uppercase tracking-[0.5em] text-stone-400 mb-4 font-medium">Archive Registration</h2>
+            <h1 className="text-3xl sm:text-4xl font-light text-stone-900 tracking-tight">
+              Begin your <span className="italic text-stone-400 font-normal">Identity.</span>
             </h1>
           </header>
 
           {error && (
-            <div className="mb-8 p-4 border border-stone-900 bg-red-900/10 border-l-red-900 border-l-2">
-              <p className="text-[9px] uppercase tracking-widest text-red-500/80 font-medium">{error}</p>
+            <div className="mb-8 p-4 bg-stone-50 border-l-2 border-stone-900">
+              <p className="text-[9px] uppercase tracking-widest text-stone-600 font-medium">{error}</p>
             </div>
           )}
           
-          <form onSubmit={handleSubmit} className="space-y-12" autoComplete="off">
+          <form onSubmit={handleSubmit} className="space-y-10" autoComplete="off">
             {/* Email Input */}
-            <div className="relative border-b border-stone-900 pb-2 group focus-within:border-stone-700 transition-colors">
-              <label className="text-[9px] uppercase tracking-[0.4em] text-stone-600 block mb-2 group-focus-within:text-stone-400 transition-colors">
+            <div className="relative border-b border-stone-100 pb-2 group focus-within:border-stone-900 transition-all duration-500">
+              <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-2 group-focus-within:text-stone-900 transition-colors">
                 Email Address
               </label>
               <input
                 type="email"
                 autoComplete="off"
-                placeholder="USER@EXAMPLE.COM"
+                placeholder="USER@DOMAIN.COM"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-transparent text-[13px] uppercase tracking-[0.2em] text-stone-200 outline-none placeholder:text-stone-800"
+                className="w-full bg-transparent text-[13px] uppercase tracking-[0.1em] text-stone-900 outline-none placeholder:text-stone-200"
                 required
               />
             </div>
 
-            {/* Security Key Input - Green Eye Fixed */}
-            <div className="relative border-b border-stone-900 pb-2 group focus-within:border-stone-700 transition-colors">
-              <label className="text-[9px] uppercase tracking-[0.4em] text-stone-600 block mb-2 group-focus-within:text-stone-400 transition-colors">
+            {/* Password Input */}
+            <div className="relative border-b border-stone-100 pb-2 group focus-within:border-stone-900 transition-all duration-500">
+              <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-2 group-focus-within:text-stone-900 transition-colors">
                 Security Key
               </label>
               <input
@@ -89,89 +87,74 @@ const SignUp = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent text-[13px] tracking-[0.3em] text-stone-200 outline-none placeholder:text-stone-800 pr-10"
+                className="w-full bg-transparent text-[13px] tracking-[0.3em] text-stone-900 outline-none placeholder:text-stone-200 pr-10"
                 required
               />
               <button 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0 bottom-3 text-stone-700 hover:text-stone-400 transition-colors z-20"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-0 bottom-3 text-stone-300 hover:text-stone-900 transition-colors"
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
               </button>
             </div>
 
             <button 
               type="submit" 
               disabled={loading} 
-              className="w-full group flex items-center justify-between px-10 py-5 bg-stone-900 text-stone-400 text-[10px] uppercase tracking-[0.4em] hover:bg-stone-800 hover:text-stone-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-700 border border-stone-800/50"
+              className="w-full group flex items-center justify-between px-10 py-5 bg-stone-950 text-white text-[10px] uppercase tracking-[0.4em] hover:bg-stone-800 disabled:bg-stone-100 disabled:text-stone-400 transition-all duration-700"
             >
               {loading ? (
-                <span className="flex items-center gap-2 italic lowercase tracking-normal text-stone-500">
-                  Initializing...
-                  <Loader2 size={14} className="animate-spin" />
+                <span className="flex items-center gap-3 italic lowercase tracking-normal">
+                  Initializing <Loader2 size={14} className="animate-spin" />
                 </span>
               ) : (
                 <>
-                  Register
-                  <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  Register Archive
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
                 </>
               )}
             </button>
           </form>
 
-          <footer className="mt-16 pt-8 border-t border-stone-900 flex justify-between items-center">
-            <Link to="/login" className="text-[9px] uppercase tracking-widest text-stone-600 hover:text-stone-300 transition-colors">
-              Existing Member?
+          <footer className="mt-20 pt-8 border-t border-stone-50 flex justify-between items-center">
+            <Link to="/login" className="text-[9px] uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors underline underline-offset-4 decoration-stone-100 hover:decoration-stone-900">
+              Existing Identity
             </Link>
-            <span className="text-[9px] uppercase tracking-widest text-stone-800 font-medium">
+            <span className="text-[9px] uppercase tracking-widest text-stone-300">
               EST. MMXXVI
             </span>
           </footer>
         </div>
       </div>
 
-      {/* Visual Side */}
-      <div className="hidden md:flex md:w-1/2 bg-[#050505] items-center justify-center border-l border-stone-900 order-1 md:order-2">
-        <div className="w-full h-full flex items-center justify-center p-12 lg:p-32">
-          <div className="w-full max-w-sm aspect-[3/4] overflow-hidden grayscale opacity-20 relative border border-stone-900/50">
-             <img 
-              src={ARCHIVE_IMAGE_CDN} 
-              alt="Membership Visual" 
-              className="w-full h-full object-cover"
-             />
-             <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 to-transparent" />
+      {/* Visual Side - Editorial Image */}
+      <div className="hidden md:flex md:w-1/2 bg-stone-50 items-center justify-center border-l border-stone-100 p-12 lg:p-24">
+        <div className="relative w-full h-full max-w-sm aspect-[3/4] group">
+          <div className="absolute inset-0 border border-stone-200 -m-4 group-hover:m-0 transition-all duration-1000" />
+          <img 
+            src={ARCHIVE_IMAGE_CDN} 
+            alt="Membership Visual" 
+            className="w-full h-full object-cover grayscale contrast-[1.1] brightness-[1.05]"
+          />
+          <div className="absolute bottom-6 left-6 text-white mix-blend-difference">
+            <p className="text-[8px] uppercase tracking-[0.5em] opacity-70">Archive Identity</p>
           </div>
         </div>
       </div>
 
-      {/* CRITICAL CSS OVERRIDES */}
       <style>
         {`
-          /* 1. Kills the browser's forced 'green' eye icon */
+          input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+            -webkit-text-fill-color: #1c1917 !important;
+          }
           input::-webkit-credentials-auto-fill-button {
             visibility: hidden !important;
             display: none !important;
-            pointer-events: none !important;
-          }
-
-          /* 2. Forces browser to stay dark even on password suggestions */
-          input:-webkit-autofill,
-          input:-webkit-autofill:hover, 
-          input:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0px 1000px #0c0a09 inset !important;
-            -webkit-text-fill-color: #d6d3d1 !important;
-          }
-
-          /* 3. General cleanup for Edge and Chrome */
-          input::-ms-reveal,
-          input::-ms-clear {
-            display: none;
           }
         `}
       </style>
-
     </section>
   );
 };

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ChevronRight, Send } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState('');
 
   const handleInputChange = (e) => {
@@ -10,52 +11,61 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.message) {
+    setIsSubmitting(true);
+    
+    // Simulate API delay
+    setTimeout(() => {
       setFormStatus('Inquiry transmitted successfully.');
       setFormData({ name: '', email: '', message: '' });
-    } else {
-      setFormStatus('Please complete all authentication fields.');
-    }
+      setIsSubmitting(false);
+      
+      // Clear status after 5 seconds
+      setTimeout(() => setFormStatus(''), 5000);
+    }, 1500);
   };
 
   return (
-    <section className="min-h-screen bg-stone-950 flex flex-col items-center justify-center px-8 py-20 overflow-hidden">
+    <section className="min-h-screen bg-white flex flex-col items-center justify-center px-8 py-32">
       
-      {/* ANTI-BLOCKING STYLE: Removes browser green/blue highlights */}
+      {/* Custom Styles for Input Autofill and Focus */}
       <style>
         {`
-          input:-webkit-autofill,
-          textarea:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0px 1000px #0c0a09 inset !important;
-            -webkit-text-fill-color: #d6d3d1 !important;
-            transition: background-color 5000s ease-in-out 0s;
+          input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+            -webkit-text-fill-color: #1c1917 !important;
           }
-          input, textarea {
-            caret-color: #d6d3d1 !important;
+          .custom-focus:focus-within label {
+            transform: translateY(-4px);
+            color: #1c1917;
           }
         `}
       </style>
 
-      <div className="w-full max-w-xl">
-        <header className="mb-12">
-          <h2 className="text-[10px] uppercase tracking-[0.5em] text-stone-600 mb-4 font-medium">Communication</h2>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extralight text-stone-300 tracking-tight whitespace-nowrap">
-            Send a <span className="italic text-stone-500 font-normal">Message.</span>
+      <div className="w-full max-w-xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <header className="mb-16">
+          <h2 className="text-[10px] uppercase tracking-[0.5em] text-stone-400 mb-4 font-medium">
+            Contact Archive
+          </h2>
+          <h1 className="text-3xl sm:text-4xl font-light text-stone-900 tracking-tight leading-tight">
+            Have a question? <br />
+            <span className="italic text-stone-400 font-normal text-2xl sm:text-3xl">Send us a message.</span>
           </h1>
         </header>
 
         {formStatus && (
-          <div className="mb-8 p-4 border border-stone-900 bg-stone-900/30">
-            <p className="text-[9px] uppercase tracking-widest text-stone-500">{formStatus}</p>
+          <div className="mb-10 p-5 bg-stone-50 border border-stone-100">
+            <p className="text-[10px] uppercase tracking-widest text-stone-600 font-medium">
+              {formStatus}
+            </p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-10">
+        <form onSubmit={handleSubmit} className="space-y-12">
           {/* Name Input */}
-          <div className="relative border-b border-stone-900 pb-2 group focus-within:border-stone-700 transition-colors">
-            <label className="text-[9px] uppercase tracking-[0.4em] text-stone-600 block mb-2 group-focus-within:text-stone-400 transition-colors">
+          <div className="custom-focus relative border-b border-stone-100 pb-2 transition-all duration-500 focus-within:border-stone-900">
+            <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 transition-all duration-500">
               Full Name
             </label>
             <input
@@ -63,59 +73,70 @@ const Contact = () => {
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              placeholder="YOUR NAME"
-              className="w-full bg-transparent text-[13px] uppercase tracking-[0.2em] text-stone-200 outline-none placeholder:text-stone-800"
+              placeholder="YOUR IDENTITY"
+              className="w-full bg-transparent text-sm tracking-[0.1em] text-stone-900 outline-none placeholder:text-stone-200"
               required
             />
           </div>
 
           {/* Email Input */}
-          <div className="relative border-b border-stone-900 pb-2 group focus-within:border-stone-700 transition-colors">
-            <label className="text-[9px] uppercase tracking-[0.4em] text-stone-600 block mb-2 group-focus-within:text-stone-400 transition-colors">
-              Return Address
+          <div className="custom-focus relative border-b border-stone-100 pb-2 transition-all duration-500 focus-within:border-stone-900">
+            <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 transition-all duration-500">
+              Email Address
             </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              placeholder="USER@EXAMPLE.COM"
-              className="w-full bg-transparent text-[13px] uppercase tracking-[0.2em] text-stone-200 outline-none placeholder:text-stone-800"
+              placeholder="EMAIL@DOMAIN.COM"
+              className="w-full bg-transparent text-sm tracking-[0.1em] text-stone-900 outline-none placeholder:text-stone-200"
               required
             />
           </div>
 
           {/* Message Input */}
-          <div className="relative border-b border-stone-900 pb-2 group focus-within:border-stone-700 transition-colors">
-            <label className="text-[9px] uppercase tracking-[0.4em] text-stone-600 block mb-2 group-focus-within:text-stone-400 transition-colors">
-              The Message
+          <div className="custom-focus relative border-b border-stone-100 pb-2 transition-all duration-500 focus-within:border-stone-900">
+            <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 transition-all duration-500">
+              Your Message
             </label>
             <textarea
               name="message"
               value={formData.message}
               onChange={handleInputChange}
-              placeholder="TYPE YOUR INQUIRY..."
-              className="w-full bg-transparent text-[13px] uppercase tracking-[0.2em] text-stone-200 outline-none placeholder:text-stone-800 min-h-[120px] resize-none"
+              placeholder="HOW CAN WE ASSIST YOU?"
+              className="w-full bg-transparent text-sm tracking-[0.1em] text-stone-900 outline-none placeholder:text-stone-200 min-h-[100px] resize-none"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full group flex items-center justify-between px-10 py-5 bg-stone-900 text-stone-400 text-[10px] uppercase tracking-[0.4em] hover:bg-stone-800 hover:text-stone-100 transition-all duration-700 border border-stone-800/50"
+            disabled={isSubmitting}
+            className="group w-full flex items-center justify-between px-10 py-5 bg-stone-950 text-white text-[10px] uppercase tracking-[0.4em] hover:bg-stone-800 disabled:bg-stone-100 disabled:text-stone-400 transition-all duration-700"
           >
-            Transmit Message
-            <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            {isSubmitting ? (
+              <span className="flex items-center gap-3">
+                <Loader2 size={14} className="animate-spin" /> Transmitting...
+              </span>
+            ) : (
+              <>
+                Send Message
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-500" />
+              </>
+            )}
           </button>
         </form>
 
-        <footer className="mt-16 pt-8 border-t border-stone-900 flex justify-between items-center">
-          <span className="text-[9px] uppercase tracking-widest text-stone-600">
-            Archive Support
-          </span>
-          <span className="text-[9px] uppercase tracking-widest text-stone-800 font-medium">
-            EST. MMXXVI
-          </span>
+        <footer className="mt-20 pt-10 border-t border-stone-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+          <div>
+            <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">General Inquiries</p>
+            <p className="text-[10px] uppercase tracking-widest text-stone-900 font-medium">support@vendoarchive.com</p>
+          </div>
+          <div className="text-left sm:text-right">
+            <p className="text-[9px] uppercase tracking-widest text-stone-400 mb-1">Response Time</p>
+            <p className="text-[10px] uppercase tracking-widest text-stone-900 font-medium">24 — 48 Hours</p>
+          </div>
         </footer>
       </div>
     </section>

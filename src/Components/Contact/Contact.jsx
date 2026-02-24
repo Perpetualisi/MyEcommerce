@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Loader2, CheckCircle2, Globe, Clock3 } from 'lucide-react';
+import { ArrowRight, Loader2, CheckCircle2, Globe, Clock3, Terminal, ShieldCheck } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', category: 'General', message: '' });
@@ -17,135 +17,150 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate Encrypted Transmission
+    // Simulate Encrypted Transmission Handshake
     setTimeout(() => {
       setIsSent(true);
       setIsSubmitting(false);
       setFormData({ name: '', email: '', category: 'General', message: '' });
-      
       setTimeout(() => setIsSent(false), 8000);
-    }, 2000);
+    }, 2400);
   };
 
   return (
-    <section className="min-h-screen bg-white flex flex-col lg:flex-row selection:bg-stone-900 selection:text-white">
+    <section className="min-h-screen bg-[#080705] text-[#e8e4dd] flex flex-col lg:flex-row selection:bg-[#e8e4dd] selection:text-[#080705] font-sans">
       
-      {/* Left Column: Contextual Info */}
-      <div className="lg:w-5/12 bg-stone-50 p-8 sm:p-16 lg:p-24 flex flex-col justify-between border-r border-stone-100">
-        <div className="space-y-12 animate-in fade-in slide-in-from-left-6 duration-1000">
-          <header>
-            <h2 className="text-[10px] uppercase tracking-[0.6em] text-stone-400 mb-6 font-bold">
-              Communication Archive / US
-            </h2>
-            <h1 className="text-4xl sm:text-6xl font-extralight text-stone-900 tracking-tighter leading-[1.1]">
-              Initiate a <br />
-              <span className="font-serif italic text-stone-400">Correspondence.</span>
+      {/* ── LEFT COLUMN: ARCHIVAL CONTEXT ── */}
+      <div className="lg:w-5/12 bg-[#0c0a09] p-8 sm:p-16 lg:p-24 flex flex-col justify-between border-r border-stone-900 relative overflow-hidden">
+        {/* Decorative Grid Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        
+        <div className="space-y-16 animate-in fade-in slide-in-from-left-8 duration-1000 z-10">
+          <header className="space-y-6">
+            <div className="flex items-center gap-4">
+              <Terminal size={14} className="text-stone-700" />
+              <h2 className="text-[10px] uppercase tracking-[0.6em] text-stone-500 font-black">
+                COMMS_ARCHIVE // US-EST
+              </h2>
+            </div>
+            <h1 className="text-5xl sm:text-7xl font-extralight text-white tracking-tighter leading-[1.0] transition-all">
+              Initiate <br />
+              <span className="font-serif italic text-stone-500">Correspondence.</span>
             </h1>
           </header>
 
-          <div className="space-y-8 max-w-sm">
-            <p className="text-stone-500 text-sm leading-relaxed font-light tracking-wide">
-              Whether you are inquiring about a specific gadget, tracking an artisan pantry shipment, or seeking interior consultation, our US-based team is available for global assistance.
+          <div className="space-y-10 max-w-sm">
+            <p className="text-stone-500 text-sm leading-relaxed font-light tracking-wide italic font-serif">
+              "Every transmission is a permanent record in our domestic registry."
             </p>
             
-            <div className="space-y-4 pt-4">
+            <p className="text-stone-600 text-[11px] uppercase tracking-[0.2em] leading-relaxed">
+              Our New York hub processes inquiries regarding technical specifications, archive sourcing, and logistical routing for global fulfillment.
+            </p>
+            
+            <div className="space-y-6 pt-6 border-t border-stone-900">
               <div className="flex items-center gap-4 group">
-                <Globe size={14} className="text-stone-300 group-hover:text-stone-900 transition-colors" />
-                <span className="text-[10px] uppercase tracking-[0.3em] text-stone-900 font-bold">Domestic & Global Support</span>
+                <Globe size={14} className="text-stone-800 group-hover:text-white transition-colors" />
+                <span className="text-[9px] uppercase tracking-[0.4em] text-stone-400 font-bold">Global Relay Active</span>
               </div>
               <div className="flex items-center gap-4 group">
-                <Clock3 size={14} className="text-stone-300 group-hover:text-stone-900 transition-colors" />
-                {/* Updated to US Timezone */}
-                <span className="text-[10px] uppercase tracking-[0.3em] text-stone-900 font-bold">EST Response Protocol</span>
+                <Clock3 size={14} className="text-stone-800 group-hover:text-white transition-colors" />
+                <span className="text-[9px] uppercase tracking-[0.4em] text-stone-400 font-bold">EST Protocol: 0900—1800</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-20 lg:mt-0">
-          <p className="text-[8px] uppercase tracking-[0.5em] text-stone-300">EST. MMXXVI — VENDO CURATION USA</p>
+        <div className="mt-24 lg:mt-0 opacity-30">
+          <p className="text-[8px] font-mono uppercase tracking-[0.5em]">VENDO_SYSTEM_v2.0.26 // ENCRYPTED</p>
         </div>
       </div>
 
-      {/* Right Column: Interaction Form */}
-      <div className="lg:w-7/12 p-8 sm:p-16 lg:p-24 flex items-center justify-center">
+      {/* ── RIGHT COLUMN: TRANSMISSION TERMINAL ── */}
+      <div className="lg:w-7/12 p-8 sm:p-16 lg:p-24 flex items-center justify-center bg-[#080705]">
         <div className="w-full max-w-xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
           
           {isSent ? (
-            <div className="text-center py-20 space-y-6 animate-in zoom-in-95 duration-700">
-              <CheckCircle2 size={48} strokeWidth={1} className="mx-auto text-stone-900" />
-              <div className="space-y-2">
-                <h3 className="text-[11px] uppercase tracking-[0.5em] font-bold text-stone-900">Transmission Successful</h3>
-                <p className="text-xs text-stone-500 font-light tracking-widest uppercase">Your inquiry has been archived in our New York hub.</p>
+            <div className="text-center py-24 space-y-8 animate-in zoom-in-95 duration-700 border border-stone-900 bg-[#0c0a09]/50 p-12">
+              <div className="relative inline-block">
+                <CheckCircle2 size={56} strokeWidth={1} className="text-white" />
+                <div className="absolute inset-0 blur-xl bg-white/10 animate-pulse" />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-[12px] uppercase tracking-[0.6em] font-black text-white">Transmission Successful</h3>
+                <p className="text-[10px] text-stone-500 font-mono tracking-widest uppercase">Packet ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                <p className="text-[10px] text-stone-600 uppercase tracking-widest leading-relaxed mt-4 max-w-xs mx-auto">
+                  Your inquiry has been indexed in the New York Registry. Expect a manual response.
+                </p>
               </div>
               <button 
                 onClick={() => setIsSent(false)}
-                className="text-[9px] uppercase tracking-[0.4em] text-stone-400 hover:text-stone-900 transition-colors pt-8 font-bold"
+                className="text-[9px] uppercase tracking-[0.4em] text-stone-500 hover:text-white transition-all pt-12 font-black border-b border-stone-900 hover:border-white pb-2"
               >
-                Send another message
+                New Correspondence
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-12">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                {/* Name */}
-                <div className="relative border-b border-stone-100 pb-2 group focus-within:border-stone-900 transition-all duration-500">
-                  <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 font-bold">Full Identity</label>
+            <form onSubmit={handleSubmit} className="space-y-16">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                {/* Identity */}
+                <div className="relative border-b border-stone-800 pb-4 group focus-within:border-white transition-all duration-700">
+                  <label className="text-[9px] uppercase tracking-[0.5em] text-stone-600 block mb-4 font-black">Identity</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="NAME SURNAME"
-                    className="w-full bg-transparent text-[12px] tracking-[0.1em] text-stone-900 outline-none placeholder:text-stone-100"
+                    placeholder="REQUIRED"
+                    className="w-full bg-transparent text-[11px] font-mono tracking-[0.2em] text-white outline-none placeholder:text-stone-900 uppercase"
                     required
                   />
                 </div>
-                {/* Email */}
-                <div className="relative border-b border-stone-100 pb-2 group focus-within:border-stone-900 transition-all duration-500">
-                  <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 font-bold">Electronic Mail</label>
+                {/* Mail */}
+                <div className="relative border-b border-stone-800 pb-4 group focus-within:border-white transition-all duration-700">
+                  <label className="text-[9px] uppercase tracking-[0.5em] text-stone-600 block mb-4 font-black">Electronic Mail</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="EMAIL@ARCHIVE.COM"
-                    className="w-full bg-transparent text-[12px] tracking-[0.1em] text-stone-900 outline-none placeholder:text-stone-100"
+                    placeholder="ARCHIVE@RELAY.IO"
+                    className="w-full bg-transparent text-[11px] font-mono tracking-[0.2em] text-white outline-none placeholder:text-stone-900 uppercase"
                     required
                   />
                 </div>
               </div>
 
-              {/* Subject Selector */}
-              <div className="space-y-4">
-                <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block font-bold">Archive Department</label>
-                <div className="flex flex-wrap gap-3">
+              {/* Department Selector */}
+              <div className="space-y-6">
+                <label className="text-[9px] uppercase tracking-[0.5em] text-stone-600 block font-black">Departmental Routing</label>
+                <div className="grid grid-cols-2 gap-3">
                   {categories.map((cat) => (
                     <button
                       key={cat}
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, category: cat }))}
-                      className={`px-4 py-2 text-[9px] uppercase tracking-widest border transition-all duration-500 font-bold ${
+                      className={`px-6 py-4 text-[9px] uppercase tracking-[0.3em] border transition-all duration-500 font-bold flex items-center justify-between ${
                         formData.category === cat 
-                        ? 'bg-stone-900 border-stone-900 text-white' 
-                        : 'border-stone-100 text-stone-400 hover:border-stone-300'
+                        ? 'bg-white border-white text-black' 
+                        : 'border-stone-900 text-stone-600 hover:border-stone-700'
                       }`}
                     >
                       {cat}
+                      {formData.category === cat && <ShieldCheck size={12} />}
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Message */}
-              <div className="relative border-b border-stone-100 pb-2 group focus-within:border-stone-900 transition-all duration-500">
-                <label className="text-[9px] uppercase tracking-[0.4em] text-stone-400 block mb-3 font-bold">Inquiry Details</label>
+              <div className="relative border-b border-stone-800 pb-4 group focus-within:border-white transition-all duration-700">
+                <label className="text-[9px] uppercase tracking-[0.5em] text-stone-600 block mb-4 font-black">Inquiry Payload</label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  placeholder="PROVIDE SUFFICIENT DETAIL FOR OUR US TEAM"
-                  className="w-full bg-transparent text-[12px] tracking-[0.1em] text-stone-900 outline-none placeholder:text-stone-100 min-h-[120px] resize-none"
+                  placeholder="PROVIDE SUFFICIENT DATA..."
+                  className="w-full bg-transparent text-[12px] tracking-[0.1em] text-white outline-none placeholder:text-stone-900 min-h-[150px] resize-none leading-relaxed"
                   required
                 />
               </div>
@@ -153,32 +168,33 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="group w-full flex items-center justify-between px-10 py-6 bg-stone-950 text-white text-[10px] uppercase tracking-[0.4em] font-bold hover:bg-stone-800 disabled:bg-stone-100 disabled:text-stone-400 transition-all duration-700 shadow-2xl shadow-stone-200"
+                className="group w-full flex items-center justify-between px-12 py-8 bg-white text-black text-[10px] uppercase tracking-[0.6em] font-black hover:bg-stone-200 disabled:bg-stone-900 disabled:text-stone-700 transition-all duration-1000 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
               >
                 {isSubmitting ? (
-                  <span className="flex items-center gap-4 italic lowercase tracking-normal">
-                    Syncing with US Hub <Loader2 size={14} className="animate-spin" />
+                  <span className="flex items-center gap-6 font-mono lowercase italic tracking-normal">
+                    syncing_packets... <Loader2 size={14} className="animate-spin text-black" />
                   </span>
                 ) : (
                   <>
-                    Transmit Correspondence
-                    <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform duration-500" />
+                    Transmit Packet
+                    <ArrowRight size={14} className="group-hover:translate-x-3 transition-transform duration-700" />
                   </>
                 )}
               </button>
             </form>
           )}
 
-          <div className="mt-20 grid grid-cols-2 gap-8 text-[9px] uppercase tracking-[0.3em] text-stone-400">
-              <div>
-                <p className="mb-2 text-stone-900 font-bold underline underline-offset-4">New York HQ</p>
+          {/* Footer Metadata */}
+          <div className="mt-24 grid grid-cols-2 gap-12 text-[8px] font-mono uppercase tracking-[0.4em] text-stone-700 border-t border-stone-900 pt-10">
+              <div className="space-y-2">
+                <p className="text-stone-500 font-black mb-4">Registry HQ // 01</p>
                 <p>401 Broadway, Suite 22</p>
-                <p>SoHo, NY — 10013</p>
+                <p>SoHo, New York — 10013</p>
               </div>
-              <div className="text-right">
-                <p className="mb-2 text-stone-900 font-bold">Social Archive</p>
-                <p className="hover:text-stone-900 cursor-pointer">Instagram</p>
-                <p className="hover:text-stone-900 cursor-pointer">Pinterest</p>
+              <div className="text-right space-y-2">
+                <p className="text-stone-500 font-black mb-4">Digital Archives</p>
+                <p className="hover:text-white cursor-crosshair transition-colors">Instagram.Index</p>
+                <p className="hover:text-white cursor-crosshair transition-colors">Pinterest.Archive</p>
               </div>
           </div>
         </div>
@@ -187,8 +203,8 @@ const Contact = () => {
       <style>
         {`
           input:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-            -webkit-text-fill-color: #1c1917 !important;
+            -webkit-box-shadow: 0 0 0px 1000px #080705 inset !important;
+            -webkit-text-fill-color: #e8e4dd !important;
           }
         `}
       </style>

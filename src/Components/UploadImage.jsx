@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { storage } from '../../Firebase'; 
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { Upload, X, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { Upload, X, CheckCircle2, Loader2, AlertCircle, Info, FileText } from 'lucide-react';
 
 const UploadImage = ({ onUploadComplete }) => {
   const [image, setImage] = useState(null);
@@ -9,147 +9,219 @@ const UploadImage = ({ onUploadComplete }) => {
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [meta, setMeta] = useState({ name: '', size: '', type: '' });
+  
+  const fileInputRef = useRef(null);
 
-  // Clean up object URLs to avoid memory leaks
+  // Memory Cleanup
   useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
+    return () => { if (preview) URL.revokeObjectURL(preview); };
   }, [preview]);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const processFile = (file) => {
     setError(null);
+    if (!file) return;
 
-    if (file) {
-      // Validation: Limit to 5MB for the archive
-      if (file.size > 5 * 1024 * 1024) {
-        setError("Object size exceeds 5MB threshold.");
-        return;
-      }
-      
-      setImage(file);
-      setPreview(URL.createObjectURL(file));
+    // Registry Validation: 10MB Limit for High-Res Archives
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Inquiry Rejected: Payload exceeds 10MB limit.");
+      return;
     }
+
+    setMeta({
+      name: file.name.toUpperCase(),
+      size: (file.size / 1024 / 1024).toFixed(2) + " MB",
+      type: file.type.split('/')[1].toUpperCase()
+    });
+
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
   };
 
-  const clearSelection = () => {
-    if (preview) URL.revokeObjectURL(preview);
-    setImage(null);
-    setPreview(null);
-    setProgress(0);
-    setError(null);
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") setIsDragging(true);
+    else if (e.type === "dragleave") setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processFile(e.dataTransfer.files[0]);
+    }
   };
 
   const handleUpload = () => {
     if (!image) return;
-
     setIsUploading(true);
-    // Organized into the NY-2026 directory structure
-    const storageRef = ref(storage, `archive/v2026/${Date.now()}_${image.name}`);
+
+    // Sanitize filename for the registry
+    const timestamp = Date.now();
+    const sanitizedName = image.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
+    const storageRef = ref(storage, `archive/v2026/NY_${timestamp}_${sanitizedName}`);
+    
     const uploadTask = uploadBytesResumable(storageRef, image);
 
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progressPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(Math.round(progressPercent));
+        const p = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(Math.round(p));
       },
       (err) => {
-        console.error("Transmission Interrupted:", err);
-        setError("Upload failed. Check network connection.");
+        setError("Transmission Fault: Network Handshake Failed.");
         setIsUploading(false);
       },
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setIsUploading(false);
-        
-        // Pass the URL up to the parent component (e.g., to save to Firestore)
         if (onUploadComplete) onUploadComplete(downloadURL);
-
-        // Auto-reset after successful ingestion
+        
+        // Auto-purge state after success
         setTimeout(() => {
-          clearSelection();
-        }, 2000);
+          setImage(null);
+          setPreview(null);
+          setProgress(0);
+        }, 3000);
       }
     );
   };
 
   return (
-    <div className="max-w-md mx-auto p-8 bg-white border border-stone-100 shadow-sm selection:bg-stone-900 selection:text-white">
-      <h2 className="text-[10px] uppercase tracking-[0.5em] text-stone-400 mb-8 font-black">
-        Media Ingestion / US-HQ
-      </h2>
+    <div className="max-w-xl mx-auto p-10 bg-white border border-stone-200 selection:bg-stone-900 selection:text-white">
+      <header className="flex justify-between items-center mb-10 pb-6 border-b border-stone-50">
+        <div>
+          <h2 className="text-[10px] uppercase tracking-[0.6em] text-stone-900 font-black">
+            Media Ingestion Portal
+          </h2>
+          <p className="text-[8px] uppercase tracking-widest text-stone-400 mt-1">Registry / US-EAST-01</p>
+        </div>
+        <FileText size={16} className="text-stone-200" strokeWidth={1} />
+      </header>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 flex items-center gap-3 text-red-900 animate-in fade-in slide-in-from-top-2">
-          <AlertCircle size={14} />
-          <span className="text-[9px] uppercase tracking-widest font-bold">{error}</span>
+        <div className="mb-8 p-5 bg-stone-950 text-white flex items-center gap-4 animate-in fade-in slide-in-from-top-4">
+          <AlertCircle size={14} className="text-red-500" />
+          <span className="text-[9px] uppercase tracking-[0.3em] font-bold">{error}</span>
         </div>
       )}
 
       {!preview ? (
-        <label className="group flex flex-col items-center justify-center w-full h-80 border border-dashed border-stone-200 hover:border-stone-900 transition-all duration-700 cursor-pointer bg-stone-50/50">
-          <div className="p-4 rounded-full bg-white border border-stone-100 group-hover:scale-110 transition-transform duration-500 shadow-sm">
-            <Upload className="text-stone-300 group-hover:text-stone-900" strokeWidth={1} size={28} />
+        <label 
+          onDragEnter={handleDrag}
+          onDragOver={handleDrag}
+          onDragLeave={handleDrag}
+          onDrop={handleDrop}
+          className={`group relative flex flex-col items-center justify-center w-full h-[450px] border-2 border-dashed transition-all duration-1000 cursor-pointer 
+            ${isDragging ? 'border-stone-900 bg-stone-50 scale-[0.98]' : 'border-stone-100 bg-[#fafaf9]'}
+          `}
+        >
+          <div className={`p-6 rounded-full bg-white border border-stone-100 shadow-sm transition-all duration-700 ${isDragging ? 'rotate-180 scale-125' : ''}`}>
+            <Upload className="text-stone-300 group-hover:text-stone-900" strokeWidth={1} size={32} />
           </div>
-          <span className="mt-6 text-[9px] uppercase tracking-[0.4em] text-stone-400 group-hover:text-stone-900 font-bold transition-colors">
-            Select Archive Object
-          </span>
-          <p className="mt-2 text-[8px] text-stone-300 uppercase tracking-tighter">JPG, PNG, WEBP — MAX 5MB</p>
-          <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
-        </label>
-      ) : (
-        <div className="space-y-8 animate-in fade-in zoom-in-95 duration-700">
-          <div className="relative aspect-[4/5] w-full bg-stone-50 overflow-hidden border border-stone-100">
-            <img 
-              src={preview} 
-              alt="Preview" 
-              className={`w-full h-full object-contain p-4 mix-blend-multiply transition-all duration-1000 ${isUploading ? 'scale-90 opacity-50 blur-sm' : 'scale-100'}`} 
-            />
-            {!isUploading && (
-              <button 
-                onClick={clearSelection}
-                className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-md text-stone-900 border border-stone-100 hover:bg-stone-950 hover:text-white transition-all duration-500"
-              >
-                <X size={14} />
-              </button>
-            )}
+          
+          <div className="mt-8 text-center space-y-3">
+            <span className="block text-[10px] uppercase tracking-[0.5em] text-stone-900 font-black">
+              Deploy Archive Object
+            </span>
+            <p className="text-[9px] text-stone-400 uppercase tracking-widest leading-relaxed">
+              Drag file to terminal or <span className="text-stone-900 underline underline-offset-4">browse local drive</span>
+            </p>
           </div>
 
-          {/* Technical Progress Bar */}
-          {progress > 0 && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-[8px] uppercase tracking-widest text-stone-400 font-bold">
-                <span>Data Transmission</span>
-                <span>{progress}%</span>
+          <div className="absolute bottom-8 left-0 w-full px-8 flex justify-between opacity-40">
+            <span className="text-[7px] font-mono">SPEC: HEIC/JPG/WEBP</span>
+            <span className="text-[7px] font-mono">ENCRYPTED_UPLOAD_V2</span>
+          </div>
+          
+          <input ref={fileInputRef} type="file" className="hidden" onChange={(e) => processFile(e.target.files[0])} accept="image/*" />
+        </label>
+      ) : (
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Visual Frame */}
+            <div className="relative aspect-square w-full bg-[#fafaf9] border border-stone-100 p-4">
+              <img 
+                src={preview} 
+                className={`w-full h-full object-contain mix-blend-multiply transition-all duration-1000 ${isUploading ? 'grayscale blur-lg opacity-20' : ''}`} 
+                alt="Registry Preview"
+              />
+              {!isUploading && (
+                <button 
+                  onClick={() => { setPreview(null); setImage(null); }}
+                  className="absolute top-4 right-4 p-2 bg-white border border-stone-100 hover:bg-stone-900 hover:text-white transition-all shadow-xl"
+                >
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+
+            {/* Technical Metadata Table */}
+            <div className="space-y-6 pt-4">
+              <div className="space-y-4">
+                <h4 className="text-[8px] uppercase tracking-[0.4em] text-stone-400 font-bold">Metadata Specs</h4>
+                <div className="space-y-3 border-t border-stone-50 pt-4">
+                  {[
+                    { label: "Designation", value: meta.name.slice(0, 15) + (meta.name.length > 15 ? "..." : "") },
+                    { label: "Payload Size", value: meta.size },
+                    { label: "Encoding", value: meta.type },
+                    { label: "Archive Dir", value: "NY/2026/PROD" }
+                  ].map((item, i) => (
+                    <div key={i} className="flex justify-between items-center text-[9px] font-mono">
+                      <span className="text-stone-400 uppercase">{item.label}</span>
+                      <span className="text-stone-900 font-black tracking-tighter">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="w-full h-[1px] bg-stone-100">
-                <div 
-                  className="h-full bg-stone-950 transition-all duration-500 ease-out" 
-                  style={{ width: `${progress}%` }}
-                />
+
+              {/* Data Safety Note */}
+              <div className="p-4 bg-stone-50 border border-stone-100 flex gap-3">
+                <Info size={12} className="text-stone-300 mt-0.5" />
+                <p className="text-[8px] text-stone-500 uppercase tracking-widest leading-relaxed">
+                  Objects are permanent once archived. Verify metadata before final ingestion.
+                </p>
               </div>
             </div>
-          )}
+          </div>
+
+          {/* Progress Section */}
+          <div className="space-y-4 pt-6 border-t border-stone-50">
+             <div className="flex justify-between text-[9px] uppercase tracking-widest font-black">
+                <span className={progress === 100 ? "text-green-600" : "text-stone-900"}>
+                  {progress === 100 ? "Transmission Finalized" : "Bit-Stream Progress"}
+                </span>
+                <span className="font-mono">{progress}%</span>
+             </div>
+             <div className="w-full h-[2px] bg-stone-50 overflow-hidden">
+                <div 
+                  className="h-full bg-stone-950 transition-all duration-700 ease-in-out" 
+                  style={{ width: `${progress}%` }}
+                />
+             </div>
+          </div>
 
           <button
             onClick={handleUpload}
             disabled={isUploading || progress === 100}
-            className="group w-full py-6 bg-stone-950 text-white text-[10px] uppercase tracking-[0.5em] font-black flex items-center justify-center gap-4 hover:bg-stone-800 disabled:bg-stone-50 disabled:text-stone-300 transition-all duration-700"
+            className="group w-full py-8 bg-stone-950 text-white text-[10px] uppercase tracking-[0.5em] font-black flex items-center justify-center gap-4 hover:bg-stone-800 disabled:bg-stone-50 disabled:text-stone-200 transition-all duration-1000 shadow-2xl shadow-stone-200"
           >
             {isUploading ? (
               <>
-                <Loader2 size={14} className="animate-spin" />
-                Processing...
+                <Loader2 size={16} className="animate-spin" />
+                Syncing to Archive
               </>
             ) : progress === 100 ? (
               <>
-                <CheckCircle2 size={14} className="text-green-500" />
-                Object Archived
+                <CheckCircle2 size={16} className="text-green-500" />
+                Ingestion Successful
               </>
             ) : (
-              "Finalize Ingestion"
+              "Authorize Ingestion"
             )}
           </button>
         </div>

@@ -8,24 +8,32 @@ const Categories = () => {
       id: '01', 
       name: 'Digital Archive', 
       tag: 'Tech & Gadgets',
+      // Path matches the Electronics category in your inventory
+      path: '/shop#electronics',
       image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop' 
     },
     { 
       id: '02', 
       name: 'Sartorial', 
       tag: 'Premium Fashion',
+      // Path matches the Fashion category in your inventory
+      path: '/shop#fashion',
       image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1200&auto=format&fit=crop' 
     },
     { 
       id: '03', 
       name: 'Pantry Essentials', 
       tag: 'Artisan Groceries',
+      // Path matches the Groceries category in your inventory
+      path: '/shop#groceries',
       image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1200&auto=format&fit=crop' 
     },
     { 
       id: '04', 
       name: 'Living Space', 
       tag: 'Sculptural Furniture',
+      // Path matches the Furniture category in your inventory
+      path: '/shop#furniture',
       image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1200&auto=format&fit=crop' 
     },
   ];
@@ -57,7 +65,7 @@ const Categories = () => {
         {categories.map((category) => (
           <Link
             key={category.id}
-            to={`/shop#${category.name.toLowerCase().replace(' ', '-')}`}
+            to={category.path}
             className="group block relative"
           >
             {/* Visual Container */}

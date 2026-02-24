@@ -1,31 +1,168 @@
-/* 1. Kill the browser defaults */
+/* ──────────────────────────────────────────────────────────────────────────
+   1. REGISTRY SYSTEM VARIABLES
+   ────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Carbon Palette */
+  --bg-primary: #080705;    /* Deep Carbon */
+  --bg-secondary: #0f0e0c;  /* Soft Graphite */
+  --bg-surface: #171512;    /* Surface Elev */
+  
+  /* Textures */
+  --text-main: #e8e4dd;     /* Paper White */
+  --text-muted: #5e5a52;    /* Dimmed Data */
+  --text-dim: #2a2824;      /* Deep Shadow */
+  
+  /* Accent */
+  --accent: #d1ccc0;        /* Silver Solder */
+  --border-subtle: rgba(232, 228, 221, 0.05);
+  --border-active: rgba(232, 228, 221, 0.2);
+
+  /* Font Matrices */
+  --font-data: 'Overpass Mono', 'JetBrains Mono', monospace;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   2. CORE SYSTEM RESET
+   ────────────────────────────────────────────────────────────────────────── */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* 2. Force the screen to be full width and prevent "Ghost Margins" */
 html, body, #root {
-  width: 100vw !important;
-  min-width: 100vw !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
-  background-color: #0c0a09; /* Matches stone-950 */
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-ui);
 }
 
-/* 3. VITE/CRA FIX: Disable the centered layout that usually ships with React templates */
 #root {
-  display: block !important; /* This stops the 'centering' effect */
-  max-width: none !important; /* Removes any 1280px constraints */
+  display: flex;
+  flex-direction: column;
+  max-width: none !important;
 }
 
-/* 4. Smooth scrolling and fonts */
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
-.navbar {
-  font-family: 'Poppins', sans-serif;
+/* ──────────────────────────────────────────────────────────────────────────
+   3. ARCHIVAL ENHANCEMENTS (GRAIN & SELECTION)
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Analog Grain Overlay: Gives the UI a premium, physical feel */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+}
+
+/* Inverted Selection: Mimics film negative/high-contrast archives */
+::selection {
+  background-color: var(--text-main);
+  color: var(--bg-primary);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   4. TECHNICAL SCROLLBAR (WIREFRAME STYLE)
+   ────────────────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-dim);
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   5. COMPONENT PRIMITIVES
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Global Data Styling */
+.font-mono {
+  font-family: var(--font-data);
+  letter-spacing: -0.02em;
+}
+
+/* Global Italic Accents */
+.font-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+/* System Buttons */
+button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+/* Form Inputs - Technical Archive Look */
+input {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-data);
+  transition: border-color 0.4s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--border-active);
+}
+
+/* Image Optimization */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   6. ANIMATION DEFS
+   ────────────────────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-entry {
+  animation: fadeIn 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+}
+
+/* Disable blue highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
 }

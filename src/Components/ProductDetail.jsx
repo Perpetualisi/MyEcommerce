@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ShoppingBag, ChevronRight, ShieldCheck, Truck, Heart, ArrowLeft, Plus, Check } from 'lucide-react';
+import { ShoppingBag, ChevronRight, ShieldCheck, Truck, Heart, ArrowLeft, Check } from 'lucide-react';
+// Import Firestore logic
+import { firestore } from '../../Firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 /* ═══════════════════════════════════════════════
    STYLES
@@ -15,6 +18,18 @@ const STYLES = `
     background: #080705;
     color: #e8e4dd;
     min-height: 100vh;
+  }
+
+  /* ── LOADING ── */
+  .pd-loading {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    letter-spacing: 0.8em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
   }
 
   /* ── 404 ── */
@@ -139,9 +154,6 @@ const STYLES = `
     background: #0d0b09;
     overflow: hidden;
   }
-  @media (min-width: 900px) {
-    .pd-main-img-wrap { aspect-ratio: 4/5; }
-  }
 
   .pd-main-img {
     width: 100%;
@@ -152,7 +164,6 @@ const STYLES = `
   }
   .pd-main-img-wrap:hover .pd-main-img { transform: scale(1.05); }
 
-  /* Category badge over image */
   .pd-img-badge {
     position: absolute;
     top: 20px;
@@ -165,7 +176,6 @@ const STYLES = `
     color: #080705;
   }
 
-  /* Secondary image placeholders */
   .pd-img-thumbnails {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -201,7 +211,6 @@ const STYLES = `
     gap: 36px;
   }
 
-  /* Header */
   .pd-info-header { display: flex; flex-direction: column; gap: 20px; }
   .pd-info-eyebrow {
     display: flex;
@@ -222,11 +231,6 @@ const STYLES = `
     letter-spacing: -0.025em;
     line-height: 1.08;
   }
-  .pd-info-name em {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    color: rgba(255,255,255,0.5);
-  }
   .pd-price-row {
     display: flex;
     align-items: baseline;
@@ -245,10 +249,8 @@ const STYLES = `
     color: rgba(255,255,255,0.22);
   }
 
-  /* Divider */
   .pd-divider { height: 1px; background: rgba(255,255,255,0.06); }
 
-  /* Description */
   .pd-desc-label {
     font-size: 8px;
     letter-spacing: 0.5em;
@@ -263,7 +265,6 @@ const STYLES = `
     letter-spacing: 0.04em;
   }
 
-  /* Meta table */
   .pd-meta { display: flex; flex-direction: column; gap: 10px; }
   .pd-meta-row {
     display: flex;
@@ -294,7 +295,6 @@ const STYLES = `
     vertical-align: middle;
   }
 
-  /* Actions */
   .pd-actions { display: flex; flex-direction: column; gap: 10px; }
 
   .pd-add-btn {
@@ -328,18 +328,6 @@ const STYLES = `
     color: #080705;
   }
 
-  /* Shimmer on add */
-  .pd-add-btn::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-  }
-  .pd-add-btn.adding::after { left: 140%; }
-
   .pd-wish-btn {
     width: 100%;
     padding: 17px;
@@ -363,7 +351,6 @@ const STYLES = `
     background: rgba(232,112,112,0.04);
   }
 
-  /* Trust badges */
   .pd-trust { display: flex; flex-direction: column; gap: 20px; }
   .pd-trust-item {
     display: flex;
@@ -394,7 +381,6 @@ const STYLES = `
     letter-spacing: 0.03em;
   }
 
-  /* ── ENTRY ANIMATIONS ── */
   .pd-fade-up {
     opacity: 0;
     transform: translateY(16px);
@@ -412,7 +398,6 @@ const STYLES = `
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Mobile */
   @media (max-width: 480px) {
     .pd-wrapper { padding: 80px 5vw 80px; }
     .pd-breadcrumb { margin-bottom: 36px; }
@@ -425,15 +410,47 @@ const STYLES = `
 const ProductDetail = ({ products = [], onAddToCart = () => {} }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [addState, setAddState] = useState('idle'); // idle | adding | added
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [addState, setAddState] = useState('idle'); 
   const [wishlisted, setWishlisted] = useState(false);
 
-  const product = products.find(p =>
-    String(p.id) === String(id) || p.id === parseInt(id)
-  );
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      
+      // 1. Try finding in local products list first
+      const foundLocal = products.find(p => String(p.id) === String(id));
+      
+      if (foundLocal) {
+        setProduct(foundLocal);
+        setLoading(false);
+      } else {
+        // 2. Fallback to Firestore
+        try {
+          const docRef = doc(firestore, 'featuredProducts', id);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            setProduct({ id: docSnap.id, ...docSnap.data() });
+          } else {
+            setProduct(null);
+          }
+        } catch (error) {
+          console.error("Archive Error:", error);
+          setProduct(null);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchProduct();
+    window.scrollTo(0, 0);
+  }, [id, products]);
 
   const handleAddToCart = () => {
-    if (addState !== 'idle') return;
+    if (addState !== 'idle' || !product) return;
     setAddState('adding');
     onAddToCart(product);
     setTimeout(() => {
@@ -442,17 +459,17 @@ const ProductDetail = ({ products = [], onAddToCart = () => {} }) => {
     }, 600);
   };
 
-  const addBtnClass = `pd-add-btn${addState === 'adding' ? ' adding' : addState === 'added' ? ' added' : ''}`;
-  const addBtnLabel =
-    addState === 'adding' ? 'Adding to Archive...' :
-    addState === 'added'  ? 'Added — Heading to Cart' :
-    'Add to Archive';
-  const addBtnIcon =
-    addState === 'added' ? <Check size={14} /> :
-    addState === 'adding' ? null :
-    <ShoppingBag size={14} />;
+  // Loading State
+  if (loading) return (
+    <>
+      <style>{STYLES}</style>
+      <div className="pd-root">
+        <div className="pd-loading">Retrieving Registry Data...</div>
+      </div>
+    </>
+  );
 
-  /* 404 */
+  // 404 State
   if (!product) return (
     <>
       <style>{STYLES}</style>
@@ -469,7 +486,10 @@ const ProductDetail = ({ products = [], onAddToCart = () => {} }) => {
   );
 
   const price = Number(product.price).toLocaleString('en-US', { minimumFractionDigits: 2 });
-  const ref   = String(product.id || '').slice(0, 8).toUpperCase();
+  const ref = String(product.id || '').slice(0, 8).toUpperCase();
+  const addBtnClass = `pd-add-btn${addState === 'adding' ? ' adding' : addState === 'added' ? ' added' : ''}`;
+  const addBtnLabel = addState === 'adding' ? 'Adding to Archive...' : addState === 'added' ? 'Added — Heading to Cart' : 'Add to Archive';
+  const addBtnIcon = addState === 'added' ? <Check size={14} /> : addState === 'adding' ? null : <ShoppingBag size={14} />;
 
   return (
     <>
@@ -505,7 +525,6 @@ const ProductDetail = ({ products = [], onAddToCart = () => {} }) => {
                 <div className="pd-img-badge">{product.category || 'Item'}</div>
               </div>
 
-              {/* Thumbnail placeholders — swap with real secondary images if available */}
               <div className="pd-img-thumbnails">
                 <div className="pd-thumb">
                   <span className="pd-thumb-inner">◻</span>
@@ -521,7 +540,6 @@ const ProductDetail = ({ products = [], onAddToCart = () => {} }) => {
               <div className="pd-info-sticky">
                 <div className="pd-info-inner">
 
-                  {/* Header */}
                   <div className="pd-info-header pd-fade-up pd-d2">
                     <div className="pd-info-eyebrow">
                       <div className="pd-info-eyebrow-line" />
@@ -536,15 +554,13 @@ const ProductDetail = ({ products = [], onAddToCart = () => {} }) => {
 
                   <div className="pd-divider pd-fade-up pd-d2" />
 
-                  {/* Description */}
                   <div className="pd-fade-up pd-d3">
                     <p className="pd-desc-label">Provenance & Specifications</p>
                     <p className="pd-desc-text">
-                      A carefully selected entry in our 2026 archive. This {(product.category || 'product').toLowerCase()} piece represents the intersection of functional necessity and refined aesthetic — designed for longevity and daily utility.
+                      {product.description || `A carefully selected entry in our 2026 archive. This ${(product.category || 'product').toLowerCase()} piece represents the intersection of functional necessity and refined aesthetic — designed for longevity and daily utility.`}
                     </p>
                   </div>
 
-                  {/* Meta */}
                   <div className="pd-meta pd-fade-up pd-d3">
                     <div className="pd-meta-row">
                       <span className="pd-meta-key">Reference</span>
@@ -568,7 +584,6 @@ const ProductDetail = ({ products = [], onAddToCart = () => {} }) => {
 
                   <div className="pd-divider pd-fade-up pd-d3" />
 
-                  {/* Actions */}
                   <div className="pd-actions pd-fade-up pd-d4">
                     <button className={addBtnClass} onClick={handleAddToCart}>
                       {addBtnIcon}
@@ -585,7 +600,6 @@ const ProductDetail = ({ products = [], onAddToCart = () => {} }) => {
 
                   <div className="pd-divider pd-fade-up pd-d5" />
 
-                  {/* Trust */}
                   <div className="pd-trust pd-fade-up pd-d6">
                     <div className="pd-trust-item">
                       <div className="pd-trust-icon"><Truck size={15} strokeWidth={1.5} /></div>

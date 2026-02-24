@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react'; 
 
@@ -28,7 +28,7 @@ import './App.css';
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [pathname]);
   return null;
 };
@@ -42,11 +42,11 @@ const NavigationGuard = () => {
   if (location.pathname === '/') return null;
 
   return (
-    <div className="w-full bg-white border-b border-stone-50">
-      <div className="max-w-7xl mx-auto px-8 pt-32 pb-8">
+    <div className="w-full bg-[var(--bg-primary)] border-b border-[var(--border-subtle)] sticky top-[64px] z-40">
+      <div className="max-w-7xl mx-auto px-8 py-8">
         <Link 
           to="/" 
-          className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] text-stone-400 hover:text-stone-900 transition-all duration-500 group"
+          className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all duration-500 group font-mono"
         >
           <div className="overflow-hidden w-4 flex items-center">
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform duration-300" />
@@ -72,6 +72,22 @@ const App = () => {
 
   const handleAddToCart = (product) => {
     setCart((prevCart) => [...prevCart, { ...product, cartId: Date.now() }]);
+  };
+
+  /**
+   * Global Click Handler for Home Scrolling
+   * This intercepts clicks on links to "/" and scrolls up if already home.
+   */
+  const handleGlobalClick = (e) => {
+    const link = e.target.closest('a');
+    if (
+      link && 
+      link.getAttribute('href') === '/' && 
+      window.location.pathname === '/'
+    ) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const allProducts = [
@@ -111,7 +127,11 @@ const App = () => {
   return (
     <Router>
       <ScrollToTop />
-      <div className="bg-white min-h-screen font-sans antialiased text-stone-900 selection:bg-stone-900 selection:text-white overflow-x-hidden"> 
+      {/* Container with Global Click listener to handle "Home" scroll logic */}
+      <div 
+        onClickCapture={handleGlobalClick}
+        className="bg-[var(--bg-primary)] min-h-screen font-sans antialiased text-[var(--text-main)] selection:bg-[var(--text-main)] selection:text-[var(--bg-primary)] overflow-x-hidden"
+      > 
         
         <Navbar cartItemCount={cart.length} />
         <NavigationGuard />
@@ -120,9 +140,9 @@ const App = () => {
           <Route
             path="/"
             element={
-              <main className="animate-in fade-in duration-1000">
+              <main className="animate-entry">
                 <Hero />
-                <div className="max-w-7xl mx-auto px-6">
+                <div className="max-w-7xl mx-auto px-6 space-y-32">
                   <FeaturedProducts onAddToCart={handleAddToCart} />
                   <Categories />
                   <SpecialOffers />

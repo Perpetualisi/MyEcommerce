@@ -583,15 +583,15 @@ const STYLES = `
    CATEGORY CONFIG
 ═══════════════════════════════════════════════ */
 const CATEGORIES = [
-  { id: 'all',         label: 'All Items',  emoji: '✦', filter: () => true },
-  { id: 'electronics', label: 'Electronics', emoji: '⚡', filter: p => { const c = p.category?.toLowerCase() || ''; return c.includes('tech') || c.includes('electr') || c.includes('gadget'); }},
-  { id: 'fashion',     label: 'Fashion',    emoji: '🧥', filter: p => { const c = p.category?.toLowerCase() || ''; return c.includes('fashion') || c.includes('retail') || c.includes('cloth'); }},
-  { id: 'groceries',   label: 'Groceries',  emoji: '🧺', filter: p => { const c = p.category?.toLowerCase() || ''; return c.includes('grocer') || c.includes('food') || c.includes('pantry'); }},
-  { id: 'furniture',   label: 'Furniture',  emoji: '🛋️', filter: p => { const c = p.category?.toLowerCase() || ''; return c.includes('furnit') || c.includes('interior') || c.includes('home'); }},
+  { id: 'all',         label: 'All Items',     emoji: '✦', filter: () => true },
+  { id: 'electronics', label: 'Electronics',   emoji: '⚡', filter: p => { const c = p.category?.toLowerCase() || ''; return c.includes('tech') || c.includes('electr') || c.includes('gadget'); }},
+  { id: 'fashion',     label: 'Fashion',     emoji: '🧥', filter: p => { const c = p.category?.toLowerCase() || ''; return c.includes('fashion') || c.includes('retail') || c.includes('cloth'); }},
+  { id: 'groceries',   label: 'Groceries',   emoji: '🧺', filter: p => { const c = p.category?.toLowerCase() || ''; return c.includes('grocer') || c.includes('food') || c.includes('pantry'); }},
+  { id: 'furniture',   label: 'Furniture',   emoji: '🛋️', filter: p => { const c = p.category?.toLowerCase() || ''; return c.includes('furnit') || c.includes('interior') || c.includes('home'); }},
 ];
 
 /* ═══════════════════════════════════════════════
-   SKELETON LOADER
+   SUB-COMPONENTS
 ═══════════════════════════════════════════════ */
 const SkeletonLoader = () => (
   <div className="fp-loader">
@@ -611,9 +611,6 @@ const SkeletonLoader = () => (
   </div>
 );
 
-/* ═══════════════════════════════════════════════
-   QUICK VIEW MODAL
-═══════════════════════════════════════════════ */
 const QuickViewModal = ({ product, onClose, onAddToCart, wishlisted, onToggleWishlist, onNavigate }) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -675,9 +672,6 @@ const QuickViewModal = ({ product, onClose, onAddToCart, wishlisted, onToggleWis
   );
 };
 
-/* ═══════════════════════════════════════════════
-   PRODUCT CARD
-═══════════════════════════════════════════════ */
 const ProductCard = ({ product, onAddToCart, onQuickView, wishlisted, onToggleWishlist, onNavigate, animDelay, visible }) => (
   <div className={`fp-card${visible ? ' visible' : ''}`} style={{ animationDelay: `${animDelay}ms` }}>
     <div className="fp-card-img-wrap" onClick={() => onNavigate(product.id)}>
@@ -718,7 +712,7 @@ const ProductCard = ({ product, onAddToCart, onQuickView, wishlisted, onToggleWi
       </div>
     </div>
 
-    <div className="fp-card-info">
+    <div className="fp-card-info" onClick={() => onNavigate(product.id)} style={{cursor: 'pointer'}}>
       <p className="fp-card-name">{product.name}</p>
       <div className="fp-card-bottom">
         <span className="fp-card-price">
@@ -750,7 +744,8 @@ const FeaturedProducts = ({ onAddToCart = () => {} }) => {
     const fetchProducts = async () => {
       try {
         const snap = await getDocs(collection(firestore, 'featuredProducts'));
-        setProducts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        // We ensure we keep the Firestore ID as the primary 'id'
+        setProducts(snap.docs.map(doc => ({ ...doc.data(), id: doc.id })));
       } catch (err) {
         console.error('Error fetching featured products:', err);
       } finally {
@@ -783,6 +778,13 @@ const FeaturedProducts = ({ onAddToCart = () => {} }) => {
     products.filter(activeCat?.filter || (() => true)),
     [products, activeCat]
   );
+
+  // Helper function to handle navigation
+  const handleNavigate = (productId) => {
+    // If you are using Firestore IDs, ensure your ProductDetail component 
+    // is set up to find products by that string ID.
+    navigate(`/product/${productId}`);
+  };
 
   if (loading) return (
     <>
@@ -843,7 +845,7 @@ const FeaturedProducts = ({ onAddToCart = () => {} }) => {
                   onQuickView={setQuickView}
                   wishlisted={wishlist.has(product.id)}
                   onToggleWishlist={toggleWishlist}
-                  onNavigate={id => navigate(`/product/${id}`)}
+                  onNavigate={handleNavigate}
                   animDelay={i * 60}
                   visible={cardsVisible}
                 />
@@ -875,7 +877,7 @@ const FeaturedProducts = ({ onAddToCart = () => {} }) => {
             onAddToCart={onAddToCart}
             wishlisted={wishlist.has(quickView.id)}
             onToggleWishlist={toggleWishlist}
-            onNavigate={id => navigate(`/product/${id}`)}
+            onNavigate={handleNavigate}
           />
         )}
       </div>

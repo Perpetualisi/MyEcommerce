@@ -1,229 +1,630 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Loader2, Plus, ArrowUpRight, ArrowUpDown, X, History } from 'lucide-react';
+import { Search, Plus, ArrowUpDown, X, History, ChevronDown, Heart, Eye } from 'lucide-react';
 
-const SearchResults = ({ allProducts = [], onAddToCart }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [sortBy, setSortBy] = useState('newest'); // newest | price-asc | price-desc | alpha
-  const [loading, setLoading] = useState(false);
-  const [recentSearches, setRecentSearches] = useState([]);
+/* ═══════════════════════════════════════════════
+   STYLES
+═══════════════════════════════════════════════ */
+const STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Overpass+Mono:wght@300;400;600&display=swap');
 
-  // Load recent inquiries from storage
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('recent_inquiries') || '[]');
-    setRecentSearches(saved);
-  }, []);
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  // Sync internal state with URL
-  useEffect(() => {
-    setSearchTerm(searchParams.get('q') || '');
-  }, [searchParams]);
+  .sr-root {
+    font-family: 'Overpass Mono', monospace;
+    background: #080705;
+    color: #e8e4dd;
+    min-height: 100vh;
+  }
 
-  // Debounced URL update and search history logging
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setSearchParams(searchTerm ? { q: searchTerm } : {}, { replace: true });
-      
-      if (searchTerm.trim().length > 2) {
-        const updated = [searchTerm, ...recentSearches.filter(s => s !== searchTerm)].slice(0, 3);
-        setRecentSearches(updated);
-        localStorage.setItem('recent_inquiries', JSON.stringify(updated));
-      }
-    }, 500);
+  /* ── PAGE WRAPPER ── */
+  .sr-wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 120px 6vw 120px;
+  }
 
-    setLoading(true);
-    const loadTimer = setTimeout(() => setLoading(false), 700);
+  /* ── HEADER ── */
+  .sr-header { margin-bottom: 56px; }
 
-    return () => {
-      clearTimeout(handler);
-      clearTimeout(loadTimer);
-    };
-  }, [searchTerm, setSearchParams]);
+  .sr-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
 
-  const categories = useMemo(() => [
-    'All', 
-    ...new Set(allProducts.map(p => p.category).filter(Boolean))
-  ], [allProducts]);
+  .sr-eyebrow {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .sr-eyebrow-line { width: 28px; height: 1px; background: #C9A96E; }
+  .sr-eyebrow-text {
+    font-size: 9px; letter-spacing: 0.55em;
+    text-transform: uppercase; color: rgba(255,255,255,0.28);
+  }
 
-  const filteredProducts = useMemo(() => {
-    let results = allProducts.filter(product => {
-      const name = product.name?.toLowerCase() || '';
-      const desc = product.description?.toLowerCase() || '';
-      const matchesSearch = name.includes(searchTerm.toLowerCase()) || desc.includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
+  .sr-recent {
+    display: none;
+    align-items: center; gap: 16px;
+  }
+  @media (min-width: 640px) { .sr-recent { display: flex; } }
+  .sr-recent-label {
+    font-size: 7.5px; letter-spacing: 0.45em; text-transform: uppercase;
+    color: rgba(255,255,255,0.18);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .sr-recent-btn {
+    font-size: 8px; letter-spacing: 0.38em; text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Overpass Mono', monospace;
+    transition: color 0.25s;
+    padding: 4px 8px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .sr-recent-btn:hover { color: #C9A96E; border-color: rgba(201,169,110,0.3); }
 
-    // Handle Technical Sorting
-    return results.sort((a, b) => {
-      if (sortBy === 'price-asc') return a.price - b.price;
-      if (sortBy === 'price-desc') return b.price - a.price;
-      if (sortBy === 'alpha') return a.name.localeCompare(b.name);
-      return 0; // default newest
-    });
-  }, [allProducts, searchTerm, selectedCategory, sortBy]);
+  /* ── SEARCH INPUT ── */
+  .sr-input-wrap {
+    position: relative;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 0;
+  }
+  .sr-input {
+    width: 100%;
+    background: none; border: none; outline: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 300;
+    font-size: clamp(36px, 6vw, 86px);
+    color: #fff;
+    caret-color: #C9A96E;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .sr-input::placeholder { color: rgba(255,255,255,0.1); }
+  .sr-input-icon {
+    position: absolute; right: 0; top: 50%;
+    transform: translateY(-60%);
+    color: rgba(255,255,255,0.15);
+    pointer-events: none;
+    transition: color 0.3s;
+  }
+  .sr-input-wrap:focus-within .sr-input-icon { color: #C9A96E; }
+  .sr-clear-btn {
+    position: absolute; right: 44px; top: 50%;
+    transform: translateY(-60%);
+    background: none; border: none; cursor: pointer;
+    color: rgba(255,255,255,0.2);
+    transition: color 0.25s;
+    display: flex; align-items: center;
+  }
+  .sr-clear-btn:hover { color: rgba(255,255,255,0.7); }
+
+  /* ── TOOLBAR ── */
+  .sr-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    margin-bottom: 48px;
+  }
+  @media (min-width: 768px) {
+    .sr-toolbar { flex-direction: row; align-items: center; justify-content: space-between; }
+  }
+
+  /* Categories */
+  .sr-cats {
+    display: flex; flex-wrap: wrap; gap: 0;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .sr-cats::-webkit-scrollbar { display: none; }
+  .sr-cat-btn {
+    padding: 10px 0; margin-right: 24px;
+    font-family: 'Overpass Mono', monospace;
+    font-size: 8.5px; letter-spacing: 0.45em; text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    background: none; border: none; cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sr-cat-btn:hover { color: rgba(255,255,255,0.7); }
+  .sr-cat-btn.active { color: #fff; }
+  .sr-cat-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px; background: #C9A96E;
+  }
+
+  /* Sort */
+  .sr-sort-wrap { position: relative; flex-shrink: 0; }
+  .sr-sort-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.4);
+    font-family: 'Overpass Mono', monospace;
+    font-size: 8.5px; letter-spacing: 0.3em; text-transform: uppercase;
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sr-sort-btn:hover, .sr-sort-btn.open {
+    background: rgba(255,255,255,0.07); color: #fff;
+    border-color: rgba(255,255,255,0.13);
+  }
+  .sr-sort-dropdown {
+    position: absolute; top: calc(100% + 4px); right: 0;
+    background: #141210;
+    border: 1px solid rgba(255,255,255,0.08);
+    min-width: 200px; z-index: 30;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    animation: ddIn 0.2s cubic-bezier(0.16,1,0.3,1);
+  }
+  @keyframes ddIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+  .sr-sort-opt {
+    display: block; width: 100%;
+    padding: 12px 16px;
+    font-family: 'Overpass Mono', monospace;
+    font-size: 8.5px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+    background: none; border: none; cursor: pointer; text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s, color 0.2s;
+  }
+  .sr-sort-opt:last-child { border-bottom: none; }
+  .sr-sort-opt:hover { background: rgba(255,255,255,0.04); color: #fff; }
+  .sr-sort-opt.selected { color: #C9A96E; }
+
+  /* ── RESULTS META ── */
+  .sr-meta {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 40px;
+  }
+  .sr-meta-line { width: 28px; height: 1px; background: rgba(255,255,255,0.1); }
+  .sr-meta-text {
+    font-size: 8px; letter-spacing: 0.45em; text-transform: uppercase;
+    color: rgba(255,255,255,0.22);
+  }
+  .sr-meta-count { color: #C9A96E; }
+
+  /* ── SKELETON ── */
+  .sr-skel-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr); gap: 2px;
+  }
+  @media (max-width: 1100px) { .sr-skel-grid { grid-template-columns: repeat(3,1fr); } }
+  @media (max-width: 768px)  { .sr-skel-grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 480px)  { .sr-skel-grid { grid-template-columns: 1fr; } }
+  .sr-skel-card { display: flex; flex-direction: column; gap: 10px; }
+  .skel {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+    background-size: 400% 100%;
+    animation: shimmer 1.6s ease infinite;
+  }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+  .skel-img   { aspect-ratio: 4/5; }
+  .skel-line  { height: 10px; }
+  .skel-short { width: 55%; }
+  .skel-long  { width: 80%; }
+
+  /* ── PRODUCT GRID ── */
+  .sr-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr); gap: 2px;
+  }
+  @media (max-width: 1100px) { .sr-grid { grid-template-columns: repeat(3,1fr); } }
+  @media (max-width: 768px)  { .sr-grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 480px)  { .sr-grid { grid-template-columns: 1fr; } }
+
+  /* ── PRODUCT CARD ── */
+  .sr-card {
+    position: relative; display: flex; flex-direction: column;
+    background: #0d0b09;
+    opacity: 0; transform: translateY(14px);
+    transition: background 0.3s;
+  }
+  .sr-card.in { animation: cardIn 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+  @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+  .sr-card:hover { background: #111008; }
+
+  .sr-card-img-wrap {
+    position: relative; aspect-ratio: 4/5;
+    overflow: hidden; background: #111008; cursor: pointer;
+  }
+  .sr-card-img {
+    width: 100%; height: 100%; object-fit: contain; padding: 24px;
+    transition: transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .sr-card:hover .sr-card-img { transform: scale(1.07); }
+
+  .sr-card-overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: space-between; padding: 14px;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .sr-card:hover .sr-card-overlay { opacity: 1; }
+
+  .sr-overlay-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .sr-cat-pill {
+    font-size: 7.5px; letter-spacing: 0.4em; text-transform: uppercase;
+    padding: 5px 10px; background: #C9A96E; color: #080705;
+  }
+  .sr-overlay-icons { display: flex; gap: 6px; }
+
+  .sr-icon-btn {
+    width: 34px; height: 34px;
+    background: rgba(8,7,5,0.85); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: rgba(255,255,255,0.55);
+    transition: background 0.2s, color 0.2s;
+  }
+  .sr-icon-btn:hover { background: rgba(20,18,14,0.98); color: #fff; }
+  .sr-icon-btn.wished { color: #e87070; border-color: rgba(232,112,112,0.3); }
+
+  .sr-overlay-bottom { display: flex; flex-direction: column; gap: 6px; }
+  .sr-add-btn {
+    width: 100%; padding: 11px;
+    background: #C9A96E; border: none;
+    color: #080705; font-family: 'Overpass Mono', monospace;
+    font-size: 7.5px; letter-spacing: 0.4em; text-transform: uppercase;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+    transform: translateY(8px);
+    transition: transform 0.3s ease 0.04s, background 0.2s;
+  }
+  .sr-card:hover .sr-add-btn { transform: translateY(0); }
+  .sr-add-btn:hover { background: #d4b87a; }
+
+  .sr-card-info {
+    padding: 16px 18px 18px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .sr-card-name {
+    font-size: 10px; letter-spacing: 0.05em;
+    text-transform: uppercase; color: rgba(255,255,255,0.72); line-height: 1.5;
+  }
+  .sr-card-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .sr-card-price { font-size: 11px; font-weight: 600; color: #fff; letter-spacing: 0.04em; }
+  .sr-card-dept { font-size: 7.5px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
+
+  .sr-mobile-add {
+    display: none; width: 100%; padding: 13px;
+    background: rgba(255,255,255,0.04);
+    border: none; border-top: 1px solid rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.45); font-family: 'Overpass Mono', monospace;
+    font-size: 8px; letter-spacing: 0.35em; text-transform: uppercase;
+    cursor: pointer; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sr-mobile-add:active { background: rgba(201,169,110,0.1); color: #C9A96E; }
+  @media (max-width: 768px) {
+    .sr-mobile-add { display: flex; }
+    .sr-card-overlay { display: none; }
+  }
+
+  /* ── EMPTY STATE ── */
+  .sr-empty {
+    padding: 100px 0;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 24px; text-align: center;
+  }
+  .sr-empty-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 300;
+    font-size: clamp(22px, 3vw, 36px);
+    color: rgba(255,255,255,0.3);
+  }
+  .sr-empty-sub {
+    font-size: 8.5px; letter-spacing: 0.45em;
+    text-transform: uppercase; color: rgba(255,255,255,0.18);
+  }
+  .sr-empty-btn {
+    padding: 14px 32px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.35);
+    font-family: 'Overpass Mono', monospace;
+    font-size: 8.5px; letter-spacing: 0.4em; text-transform: uppercase;
+    background: none; cursor: pointer;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .sr-empty-btn:hover { border-color: #C9A96E; color: #C9A96E; }
+
+  /* Mobile padding */
+  @media (max-width: 480px) { .sr-wrap { padding: 90px 5vw 80px; } }
+`;
+
+const SORT_OPTIONS = [
+  { id: 'newest',     label: 'Latest Ingested' },
+  { id: 'price-asc',  label: 'Price: Low → High' },
+  { id: 'price-desc', label: 'Price: High → Low' },
+  { id: 'alpha',      label: 'Name: A → Z' },
+];
+
+/* ═══════════════════════════════════════════════
+   PRODUCT CARD
+═══════════════════════════════════════════════ */
+const ProductCard = ({ product, onAddToCart, animDelay, visible }) => {
+  const [wished, setWished] = useState(false);
+
+  const img = product.image || product.imageUrl || product.imageURL;
+  const price = typeof product.price === 'number'
+    ? `$${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
+    : product.price;
 
   return (
-    <div className="bg-white min-h-screen pt-32 px-8 sm:px-16 lg:px-24 pb-32 selection:bg-stone-900 selection:text-white font-light">
-      
-      {/* Editorial Search Header */}
-      <header className="max-w-5xl mb-20">
-        <div className="flex justify-between items-start mb-8">
-          <h2 className="text-[10px] uppercase tracking-[0.6em] text-stone-400 font-black">
-            Registry Index / 2026.02
-          </h2>
-          {recentSearches.length > 0 && (
-            <div className="hidden md:flex items-center gap-6">
-              <span className="text-[8px] uppercase tracking-widest text-stone-300 flex items-center gap-2">
-                <History size={10} /> Recent:
-              </span>
-              {recentSearches.map(s => (
-                <button 
-                  key={s} 
-                  onClick={() => setSearchTerm(s)}
-                  className="text-[9px] uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors"
-                >
-                  {s}
+    <div className={`sr-card${visible ? ' in' : ''}`} style={{ animationDelay: `${animDelay}ms` }}>
+      <div className="sr-card-img-wrap">
+        <img className="sr-card-img" src={img} alt={product.name}
+          onError={e => { e.target.style.opacity = 0.05; }} />
+
+        <div className="sr-card-overlay">
+          <div className="sr-overlay-top">
+            <span className="sr-cat-pill">{product.category || 'Item'}</span>
+            <div className="sr-overlay-icons">
+              <button
+                className={`sr-icon-btn${wished ? ' wished' : ''}`}
+                onClick={e => { e.stopPropagation(); setWished(v => !v); }}
+              >
+                <Heart size={12} fill={wished ? '#e87070' : 'none'} strokeWidth={1.5} />
+              </button>
+            </div>
+          </div>
+          <div className="sr-overlay-bottom">
+            <button className="sr-add-btn" onClick={() => onAddToCart(product)}>
+              <Plus size={10} /> Add to Bag
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="sr-card-info">
+        <p className="sr-card-name">{product.name}</p>
+        <div className="sr-card-bottom">
+          <span className="sr-card-price">{price}</span>
+          <span className="sr-card-dept">{product.category}</span>
+        </div>
+      </div>
+
+      <button className="sr-mobile-add" onClick={() => onAddToCart(product)}>
+        <Plus size={12} /> Add to Bag
+      </button>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════ */
+const SearchResults = ({ allProducts = [], onAddToCart = () => {} }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm]     = useState(searchParams.get('query') || searchParams.get('q') || '');
+  const [selectedCat, setSelectedCat]   = useState('All');
+  const [sortBy, setSortBy]             = useState('newest');
+  const [sortOpen, setSortOpen]         = useState(false);
+  const [loading, setLoading]           = useState(false);
+  const [cardsVisible, setCardsVisible] = useState(false);
+  const [recentSearches, setRecentSearches] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('recent_inquiries') || '[]'); } catch { return []; }
+  });
+
+  // Sync URL ← state
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setSearchParams(searchTerm.trim() ? { query: searchTerm.trim() } : {}, { replace: true });
+      if (searchTerm.trim().length > 2) {
+        const updated = [searchTerm.trim(), ...recentSearches.filter(s => s !== searchTerm.trim())].slice(0, 4);
+        setRecentSearches(updated);
+        try { localStorage.setItem('recent_inquiries', JSON.stringify(updated)); } catch {}
+      }
+    }, 420);
+    return () => clearTimeout(t);
+  }, [searchTerm]);
+
+  // Sync state ← URL
+  useEffect(() => {
+    const q = searchParams.get('query') || searchParams.get('q') || '';
+    setSearchTerm(q);
+  }, [searchParams]);
+
+  // Debounced loading + card reveal
+  useEffect(() => {
+    setLoading(true);
+    setCardsVisible(false);
+    const t = setTimeout(() => {
+      setLoading(false);
+      setTimeout(() => setCardsVisible(true), 60);
+    }, 520);
+    return () => clearTimeout(t);
+  }, [searchTerm, selectedCat, sortBy]);
+
+  const categories = useMemo(() => [
+    'All', ...new Set(allProducts.map(p => p.category).filter(Boolean))
+  ], [allProducts]);
+
+  const filtered = useMemo(() => {
+    const q = searchTerm.toLowerCase();
+    let list = allProducts.filter(p => {
+      const matchQ = !q ||
+        p.name?.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q) ||
+        p.category?.toLowerCase().includes(q);
+      const matchC = selectedCat === 'All' || p.category === selectedCat;
+      return matchQ && matchC;
+    });
+    switch (sortBy) {
+      case 'price-asc':  return [...list].sort((a,b) => Number(a.price) - Number(b.price));
+      case 'price-desc': return [...list].sort((a,b) => Number(b.price) - Number(a.price));
+      case 'alpha':      return [...list].sort((a,b) => (a.name||'').localeCompare(b.name||''));
+      default:           return list;
+    }
+  }, [allProducts, searchTerm, selectedCat, sortBy]);
+
+  const clearAll = useCallback(() => {
+    setSearchTerm('');
+    setSelectedCat('All');
+    setSearchParams({}, { replace: true });
+  }, [setSearchParams]);
+
+  const currentSort = SORT_OPTIONS.find(o => o.id === sortBy);
+
+  return (
+    <>
+      <style>{STYLES}</style>
+      <div className="sr-root">
+        <div className="sr-wrap">
+
+          {/* ── HEADER ── */}
+          <div className="sr-header">
+            <div className="sr-header-top">
+              <div className="sr-eyebrow">
+                <div className="sr-eyebrow-line" />
+                <span className="sr-eyebrow-text">Registry Index · 2026</span>
+              </div>
+
+              {recentSearches.length > 0 && (
+                <div className="sr-recent">
+                  <span className="sr-recent-label">
+                    <History size={10} /> Recent
+                  </span>
+                  {recentSearches.map(s => (
+                    <button key={s} className="sr-recent-btn" onClick={() => setSearchTerm(s)}>
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Big search input */}
+            <div className="sr-input-wrap">
+              <input
+                autoFocus
+                className="sr-input"
+                type="text"
+                placeholder="Search the archive..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button className="sr-clear-btn" onClick={() => setSearchTerm('')}>
+                  <X size={18} strokeWidth={1.5} />
                 </button>
+              )}
+              <Search size={28} strokeWidth={1.2} className="sr-input-icon" />
+            </div>
+          </div>
+
+          {/* ── TOOLBAR ── */}
+          <div className="sr-toolbar">
+            {/* Category tabs */}
+            <div className="sr-cats">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  className={`sr-cat-btn${selectedCat === cat ? ' active' : ''}`}
+                  onClick={() => setSelectedCat(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Sort */}
+            <div className="sr-sort-wrap">
+              <button
+                className={`sr-sort-btn${sortOpen ? ' open' : ''}`}
+                onClick={() => setSortOpen(v => !v)}
+              >
+                <ArrowUpDown size={11} />
+                {currentSort?.label}
+                <ChevronDown size={10} style={{ transform: sortOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+              </button>
+              {sortOpen && (
+                <div className="sr-sort-dropdown">
+                  {SORT_OPTIONS.map(opt => (
+                    <button
+                      key={opt.id}
+                      className={`sr-sort-opt${sortBy === opt.id ? ' selected' : ''}`}
+                      onClick={() => { setSortBy(opt.id); setSortOpen(false); }}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ── RESULTS META ── */}
+          {!loading && (
+            <div className="sr-meta">
+              <div className="sr-meta-line" />
+              <span className="sr-meta-text">
+                <span className="sr-meta-count">{filtered.length}</span>
+                {' '}result{filtered.length !== 1 ? 's' : ''} found
+                {searchTerm && <> for "<em style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', color: 'rgba(255,255,255,0.5)' }}>{searchTerm}</em>"</>}
+              </span>
+            </div>
+          )}
+
+          {/* ── CONTENT ── */}
+          {loading ? (
+            /* Skeleton */
+            <div className="sr-skel-grid">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="sr-skel-card">
+                  <div className="skel skel-img" style={{ animationDelay: `${i * 60}ms` }} />
+                  <div className="skel skel-line skel-long" style={{ animationDelay: `${i * 60 + 80}ms` }} />
+                  <div className="skel skel-line skel-short" style={{ animationDelay: `${i * 60 + 140}ms` }} />
+                </div>
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
+            /* Empty */
+            <div className="sr-empty">
+              <p className="sr-empty-title">
+                {searchTerm
+                  ? `No results for "${searchTerm}"`
+                  : 'No objects match your filter.'}
+              </p>
+              <p className="sr-empty-sub">Try a different search or clear the filter</p>
+              <button className="sr-empty-btn" onClick={clearAll}>
+                Clear Archive Filter
+              </button>
+            </div>
+          ) : (
+            /* Products */
+            <div className="sr-grid">
+              {filtered.map((product, i) => (
+                <ProductCard
+                  key={product.id || i}
+                  product={product}
+                  onAddToCart={onAddToCart}
+                  animDelay={Math.min(i * 45, 400)}
+                  visible={cardsVisible}
+                />
               ))}
             </div>
           )}
         </div>
 
-        <div className="relative group max-w-3xl">
-          <input
-            type="text"
-            className="w-full bg-transparent border-b border-stone-100 py-8 text-4xl sm:text-7xl font-extralight text-stone-900 focus:outline-none focus:border-stone-900 transition-all duration-700 placeholder:text-stone-100 font-serif italic"
-            placeholder="Search archive..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button 
-              onClick={() => setSearchTerm('')}
-              className="absolute right-12 top-1/2 -translate-y-1/2 text-stone-200 hover:text-stone-900 transition-colors"
-            >
-              <X size={20} strokeWidth={1} />
-            </button>
-          )}
-          <Search 
-            className={`absolute right-0 top-1/2 -translate-y-1/2 transition-all duration-700 ${searchTerm ? 'text-stone-900 scale-110' : 'text-stone-100'}`} 
-            size={32} 
-            strokeWidth={1}
-          />
-        </div>
-      </header>
-
-      {/* Toolbar: Category + Sort */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-20 border-b border-stone-50 pb-8">
-        <nav className="flex flex-wrap gap-x-8 gap-y-4">
-          {categories.map(category => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`text-[9px] uppercase tracking-[0.4em] transition-all duration-500 relative py-2 font-bold ${
-                selectedCategory === category ? 'text-stone-900' : 'text-stone-300 hover:text-stone-500'
-              }`}
-            >
-              {category}
-              {selectedCategory === category && (
-                <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-stone-900" />
-              )}
-            </button>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-4 border-l border-stone-100 pl-8">
-          <ArrowUpDown size={12} className="text-stone-300" />
-          <select 
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="text-[9px] uppercase tracking-[0.3em] bg-transparent outline-none cursor-pointer font-bold text-stone-500 hover:text-stone-900 transition-colors"
-          >
-            <option value="newest">Latest Ingested</option>
-            <option value="price-asc">Valuation: Low to High</option>
-            <option value="price-desc">Valuation: High to Low</option>
-            <option value="alpha">Designation: A-Z</option>
-          </select>
-        </div>
+        {/* Close sort on outside click */}
+        {sortOpen && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 29 }} onClick={() => setSortOpen(false)} />
+        )}
       </div>
-
-      {/* Results Meta */}
-      {!loading && (
-        <div className="mb-12">
-          <p className="text-[9px] uppercase tracking-[0.5em] text-stone-400 font-bold">
-            Showing {filteredProducts.length} unique entries found for your inquiry
-          </p>
-        </div>
-      )}
-
-      {/* Content Area */}
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-40">
-          <Loader2 className="animate-spin text-stone-200 mb-6" size={24} strokeWidth={1} />
-          <p className="text-[9px] uppercase tracking-[0.5em] text-stone-400 font-bold">Querying Master Registry</p>
-        </div>
-      ) : filteredProducts.length === 0 ? (
-        <div className="py-40 text-center animate-in fade-in duration-700">
-          <p className="text-stone-400 font-serif italic text-2xl">
-            "No objects match your current inquiry."
-          </p>
-          <button 
-            onClick={() => {setSearchTerm(''); setSearchParams({});}}
-            className="mt-8 text-[10px] uppercase tracking-[0.5em] text-stone-900 border-b border-stone-900 pb-1 hover:text-stone-400 hover:border-stone-400 transition-colors font-bold"
-          >
-            Clear Archive Filter
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-24">
-          {filteredProducts.map((product, index) => (
-            <div 
-              key={product.id || index} 
-              className="group flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-1000"
-              style={{ animationDelay: `${index * 40}ms` }}
-            >
-              <div className="aspect-[3/4] bg-[#fafaf9] overflow-hidden mb-8 relative border border-stone-50">
-                <img 
-                  src={product.image || product.imageUrl || product.imageURL} 
-                  alt={product.name} 
-                  className="w-full h-full object-contain p-8 mix-blend-multiply transition-all duration-1000 ease-out group-hover:scale-105"
-                />
-                
-                <div className="absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/5 transition-colors duration-700" />
-
-                <button
-                  onClick={() => onAddToCart(product)}
-                  className="absolute bottom-0 left-0 w-full bg-stone-950 text-white py-6 flex items-center justify-center gap-3 translate-y-full group-hover:translate-y-0 transition-transform duration-500"
-                >
-                  <Plus size={14} />
-                  <span className="text-[9px] uppercase tracking-[0.4em] font-black">Archive Object</span>
-                </button>
-              </div>
-
-              <div className="space-y-4 px-1">
-                <div className="flex justify-between items-start gap-4">
-                  <h3 className="text-[12px] uppercase tracking-widest text-stone-900 font-black leading-snug">
-                    {product.name}
-                  </h3>
-                  <span className="text-[12px] text-stone-900 font-light font-mono">
-                    {typeof product.price === 'number' ? `$${product.price.toFixed(2)}` : product.price}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between border-t border-stone-50 pt-4">
-                  <span className="text-[8px] text-stone-400 uppercase tracking-[0.3em] font-bold">
-                    DEPT: {product.category}
-                  </span>
-                  <ArrowUpRight size={12} className="text-stone-200 group-hover:text-stone-900 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 

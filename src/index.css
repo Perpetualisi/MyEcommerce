@@ -1,5 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Overpass+Mono:wght@300;400&display=swap');
-@import "tailwindcss";
+/* Disable Tailwind preflight — we use our own reset below.
+   Preflight sets overflow:auto on html which kills position:sticky. */
+@layer base, components, utilities;
+@import "tailwindcss/theme" layer(base);
+@import "tailwindcss/utilities" layer(utilities);
+
+/* ── STICKY FIX ────────────────────────────────────────────────────────────
+   Tailwind preflight sets overflow on html/body which creates a scroll
+   container and silently kills position:sticky on ALL descendants.
+   These rules must come AFTER @import "tailwindcss" to win the cascade.
+   Use overflow-x:clip (not hidden) — clip hides overflow without creating
+   a new scroll container so sticky works correctly.
+   ────────────────────────────────────────────────────────────────────────── */
+html, body {
+  overflow-x: clip !important;
+  overflow-y: visible !important;
+}
+
+#root {
+  display: block !important;
+  overflow: visible !important;
+}
 
 /* ──────────────────────────────────────────────────────────────────────────
    1. DESIGN TOKENS
@@ -52,7 +73,8 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  overflow-x: hidden;
+  /* clip instead of hidden — hidden kills position:sticky on descendants */
+  overflow-x: clip;
 }
 
 html, body, #root {
@@ -64,13 +86,13 @@ html, body, #root {
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   line-height: 1.6;
 }
 
 #root {
-  display: flex;
-  flex-direction: column;
+  /* Removed display:flex — it breaks position:sticky on child elements */
+  display: block;
   max-width: none;
 }
 

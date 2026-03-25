@@ -7,19 +7,20 @@ const STYLES = `
 
   .nb-root {
     font-family: 'Overpass Mono', monospace;
-    /* sticky — handled by #site-header in App.jsx */
-    position: relative;
-    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 64px;
+    z-index: 50;
     background: #000;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     transition: height 0.4s cubic-bezier(0.16,1,0.3,1),
                 border-color 0.4s ease,
-                background 0.4s ease;
-    z-index: 1;
+                background 0.4s ease,
+                box-shadow 0.4s ease;
   }
 
-  /* When user scrolls: tighten height + add blur */
   .nb-root.scrolled {
     height: 56px;
     background: rgba(0,0,0,0.97);
@@ -32,7 +33,7 @@ const STYLES = `
   .nb-inner {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 0 clamp(24px, 5vw, 80px);
+    padding: 0 clamp(20px, 5vw, 80px);
     height: 100%;
     display: flex;
     align-items: center;
@@ -40,7 +41,6 @@ const STYLES = `
     gap: 24px;
   }
 
-  /* ── LOGO ── */
   .nb-logo {
     text-decoration: none;
     display: flex; flex-direction: column; gap: 3px;
@@ -62,7 +62,6 @@ const STYLES = `
   }
   .nb-logo:hover .nb-logo-sub { color: rgba(255,255,255,0.4); }
 
-  /* ── NAV LINKS ── */
   .nb-links {
     display: none; align-items: center;
     gap: 36px; list-style: none;
@@ -86,7 +85,6 @@ const STYLES = `
   .nb-link.active { color: #fff; }
   .nb-link.active::after { width: 100%; }
 
-  /* ── ACTIONS ── */
   .nb-actions {
     display: flex; align-items: center;
     gap: 2px; flex-shrink: 0;
@@ -117,7 +115,6 @@ const STYLES = `
     margin: 0 6px;
   }
 
-  /* ── ACCOUNT DROPDOWN ── */
   .nb-account-wrap { position: relative; display: none; }
   @media (min-width: 768px) { .nb-account-wrap { display: block; } }
 
@@ -159,7 +156,6 @@ const STYLES = `
   .nb-dropdown-arrow { opacity: 0; transform: translateX(-4px); transition: opacity 0.2s, transform 0.2s; }
   .nb-dropdown-item:hover .nb-dropdown-arrow { opacity: 1; transform: translateX(0); }
 
-  /* ── MOBILE TOGGLE ── */
   .nb-mobile-toggle {
     display: flex; align-items: center; justify-content: center;
     width: 40px; height: 40px;
@@ -170,7 +166,6 @@ const STYLES = `
   .nb-mobile-toggle:hover { color: #fff; background: rgba(255,255,255,0.04); }
   @media (min-width: 1024px) { .nb-mobile-toggle { display: none; } }
 
-  /* ── MOBILE DRAWER ── */
   .nb-drawer-backdrop {
     position: fixed; inset: 0; z-index: 48;
     background: rgba(0,0,0,0.88);
@@ -264,7 +259,6 @@ const STYLES = `
   }
   .nb-drawer-auth-primary:hover { background: rgba(255,255,255,0.88); gap: 14px; }
 
-  /* ── SEARCH OVERLAY ── */
   .nb-search-overlay {
     position: fixed; inset: 0; z-index: 100;
     background: rgba(0,0,0,0.97);
@@ -330,6 +324,7 @@ const Navbar = ({ cartItemCount = 0, onCartClick }) => {
   const navigate   = useNavigate();
   const location   = useLocation();
   const accountRef = useRef(null);
+  const navRef     = useRef(null);
 
   const navLinks = [
     { name: 'Home',     path: '/' },
@@ -348,6 +343,23 @@ const Navbar = ({ cartItemCount = 0, onCartClick }) => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Measure navbar + announce bar height and expose as --header-h CSS var
+  // so Hero, pages etc. can offset correctly without hardcoding pixels
+  useEffect(() => {
+    const update = () => {
+      const header = document.getElementById('site-header');
+      const h = header ? header.offsetHeight : (navRef.current?.offsetHeight ?? 64);
+      document.documentElement.style.setProperty('--header-h', `${h}px`);
+    };
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    // Re-measure when announcement bar might be dismissed
+    const mo = new MutationObserver(update);
+    const header = document.getElementById('site-header');
+    if (header) mo.observe(header, { childList: true, subtree: true, attributes: true });
+    return () => { window.removeEventListener('resize', update); mo.disconnect(); };
   }, []);
 
   useEffect(() => {
@@ -392,7 +404,7 @@ const Navbar = ({ cartItemCount = 0, onCartClick }) => {
     <>
       <style>{STYLES}</style>
 
-      <nav className={`nb-root${scrolled ? ' scrolled' : ''}`}>
+      <nav ref={navRef} className={`nb-root${scrolled ? ' scrolled' : ''}`}>
         <div className="nb-inner">
 
           <Link to="/" className="nb-logo" onClick={handleHomeClick}>
@@ -484,7 +496,7 @@ const Navbar = ({ cartItemCount = 0, onCartClick }) => {
               </button>
             </div>
             <ul className="nb-drawer-nav">
-              {navLinks.map((link, i) => (
+              {navLinks.map((link) => (
                 <li key={link.path}>
                   <Link
                     to={link.path}

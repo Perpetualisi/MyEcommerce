@@ -391,13 +391,12 @@ const STYLES = `
   .hero-root {
     font-family: 'Overpass Mono', monospace;
     background: #000;
-    /* No padding-top — #site-header handles its own stacking */
+    padding-top: var(--header-h, 100px);
   }
 
   .hero-section {
     width: 100%;
-    /* Full viewport height — header is out of flow via sticky */
-    height: 100svh;
+    height: calc(100svh - var(--header-h, 100px));
     min-height: 640px;
     display: grid;
     grid-template-columns: 54% 46%;

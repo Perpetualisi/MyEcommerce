@@ -93,11 +93,10 @@ export const ALL_PRODUCTS = [
 const GLOBAL_STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Overpass+Mono:wght@300;400;600&display=swap');
 
-  /* ── SITE HEADER (banner + navbar as one sticky unit) ── */
+  /* ── SITE HEADER wrapper ── */
   #site-header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    /* Navbar is self-sticky (position:sticky; top:0; z-index:50)
+       This wrapper just groups banner + navbar with no extra stacking */
     background: #000;
   }
 
@@ -207,18 +206,30 @@ const GLOBAL_STYLES = `
     background: #000;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     color: rgba(255,255,255,0.45);
-    padding: 9px 6vw;
-    display: flex; align-items: center; justify-content: center; gap: 16px;
-    position: relative;
+    padding: 9px 48px 9px 16px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; min-height: 36px;
   }
   .ann-text {
     font-family: 'Overpass Mono', monospace;
-    font-size: 8px; letter-spacing: 0.45em; text-transform: uppercase;
-    text-align: center;
+    font-size: 8px; letter-spacing: 0.35em; text-transform: uppercase;
+    text-align: center; line-height: 1.6;
   }
   .ann-text strong { color: rgba(255,255,255,0.7); }
-  .ann-text a { color: rgba(255,255,255,0.5); text-decoration: underline; text-underline-offset: 3px; }
-  .ann-close { position: absolute; right: 20px; background: none; border: none; color: rgba(255,255,255,0.2); cursor: pointer; padding: 4px; transition: color 0.2s; }
+  /* Hide the decorative stars and long text on mobile */
+  .ann-mobile-hide { display: inline; }
+  @media (max-width: 600px) {
+    .ann-mobile-hide { display: none; }
+    .ann-bar { padding: 8px 40px 8px 12px; }
+    .ann-text { font-size: 7.5px; letter-spacing: 0.2em; }
+  }
+  .ann-close {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: rgba(255,255,255,0.2);
+    cursor: pointer; padding: 6px; transition: color 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
   .ann-close:hover { color: rgba(255,255,255,0.7); }
 
   /* ── RECENTLY VIEWED ── */
@@ -240,7 +251,7 @@ const GLOBAL_STYLES = `
 
   /* ── NAV GUARD ── */
   .ng-bar {
-    position: sticky; top: 0; z-index: 40;
+    position: sticky; top: var(--header-h, 64px); z-index: 40;
     background: rgba(0,0,0,0.97);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -414,10 +425,13 @@ const AnnouncementBanner = () => {
   return (
     <div className="ann-bar">
       <span className="ann-text">
-        ✦ Free archival shipping on orders over $150 — use code <strong>SHIP2026</strong> at checkout ✦
+        <span className="ann-mobile-hide">✦ Free archival shipping on orders over $150 — use code </span>
+        <span style={{ display:'inline' }} className="ann-mobile-show">Free shipping · code </span>
+        <strong>SHIP2026</strong>
+        <span className="ann-mobile-hide"> at checkout ✦</span>
       </span>
       <button className="ann-close" onClick={() => setVisible(false)} aria-label="Close">
-        <X size={12} />
+        <X size={11} />
       </button>
     </div>
   );
@@ -725,7 +739,7 @@ const App = () => {
 
       <div
         onClickCapture={handleGlobalClick}
-        style={{ background: '#000', minHeight: '100vh', overflowX: 'hidden' }}
+        style={{ background: '#000', minHeight: '100vh', overflowX: 'clip' }}
       >
         {/*
           ── SITE HEADER ──────────────────────────────────────────────

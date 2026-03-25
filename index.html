@@ -18,18 +18,21 @@
         padding: 0 !important;
         width: 100% !important;
         height: 100%;
-        overflow-x: hidden;
-        background-color: #0c0a09;
+        /* clip instead of hidden — hidden creates a scroll container
+           which kills position:sticky on ALL descendants              */
+        overflow-x: clip;
+        background-color: #000;
       }
       #root {
         width: 100%;
         margin: 0;
         padding: 0;
+        /* Never set overflow here — also kills sticky */
       }
     </style>
   </head>
 
-  <body class="bg-stone-950 m-0 p-0">
+  <body class="m-0 p-0">
     <div id="root"></div>
 
     <script type="module" src="/src/main.jsx"></script>

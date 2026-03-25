@@ -26,56 +26,56 @@ const U = (id, w = 900) =>
 
 export const ALL_PRODUCTS = [
   { id: 1,  category: 'Electronics', name: 'Samsung Galaxy Tab S9',       price: 349,  imageURL: U('1516035069371-29a1b244cc32') },
-  { id: 2,  category: 'Electronics', name: 'Apple iPhone 15 Pro',         price: 999,  imageURL: U('1592750651612-3ac0b0de5d26') },
+  { id: 2,  category: 'Electronics', name: 'Apple iPhone 15 Pro',         price: 999,  imageURL: ('/electronics/Apple-iPhone-15-Pro.jpg') },
   { id: 3,  category: 'Electronics', name: 'Sony WH-1000XM5',             price: 349,  imageURL: U('1505740420928-5e560c06d30e') },
-  { id: 4,  category: 'Electronics', name: 'LG OLED 4K TV 55"',           price: 1299, imageURL: U('1593359677879-a4021f47b40b') },
-  { id: 5,  category: 'Electronics', name: 'Apple MacBook Pro M3',        price: 2399, imageURL: U('1541807084-5c52e6a5c315') },
+  { id: 4,  category: 'Electronics', name: 'LG OLED 4K TV 55"',           price: 1299, imageURL: ('/electronics/LG-OLED.jpg') },
+  { id: 5,  category: 'Electronics', name: 'Apple MacBook Pro M3',        price: 2399, imageURL: ('/electronics/Apple-MacBook-Pro-M3.jpg') },
   { id: 6,  category: 'Electronics', name: 'Sony Alpha A7 IV',            price: 2499, imageURL: U('1516035069371-29a1b244cc32') },
-  { id: 7,  category: 'Electronics', name: 'Apple AirPods Pro 2',         price: 249,  imageURL: U('1600294037681-c80ead743435') },
-  { id: 8,  category: 'Electronics', name: 'iPad Pro 12.9"',              price: 1099, imageURL: U('1544244015-0df4cec9d125') },
+  { id: 7,  category: 'Electronics', name: 'Apple AirPods Pro 2',         price: 249,  imageURL: ('/electronics/Apple-AirPods-Pro-2.jpg') },
+  { id: 8,  category: 'Electronics', name: 'iPad Pro 12.9"',              price: 1099, imageURL: ('/electronics/iPad-Pro-12.9.jpg') },
   { id: 9,  category: 'Electronics', name: 'Dell XPS 15 Laptop',          price: 1799, imageURL: U('1496181133206-80ce9b88a853') },
-  { id: 10, category: 'Electronics', name: 'Samsung 4K Monitor 32"',      price: 649,  imageURL: U('1527443224154-39470ff63bb5') },
+  { id: 10, category: 'Electronics', name: 'Samsung 4K Monitor 32"',      price: 649,  imageURL: ('/electronics/Samsung-4K-Monitor-32.jpg') },
   { id: 11, category: 'Electronics', name: 'Bose QuietComfort 45',        price: 279,  imageURL: U('1546435770-a3e426bf472b') },
-  { id: 12, category: 'Electronics', name: 'GoPro Hero 12 Black',         price: 399,  imageURL: U('1502920514313-e8fc8f30a01a') },
-  { id: 13, category: 'Electronics', name: 'Nintendo Switch OLED',        price: 349,  imageURL: U('1612287890020-9c4e95c00bf8') },
+  { id: 12, category: 'Electronics', name: 'GoPro Hero 12 Black',         price: 399,  imageURL: ('/electronics/GoPro-Hero-12-Black.jpg') },
+  { id: 13, category: 'Electronics', name: 'Nintendo Switch OLED',        price: 349,  imageURL: ('/electronics/Nintendo-Switch-OLED.jpg') },
   { id: 14, category: 'Electronics', name: 'Kindle Paperwhite 11th Gen',  price: 139,  imageURL: U('1512499617640-c74ae3a79d37') },
   { id: 15, category: 'Electronics', name: 'Smart Home Hub',              price: 129,  imageURL: U('1558618666-fcd25c85cd64') },
   { id: 16, category: 'Fashion', name: "Levi's 501 Original Jeans",   price: 89,  imageURL: U('1542272604-787c3835535d') },
   { id: 17, category: 'Fashion', name: 'Nike Air Max 270',             price: 150, imageURL: U('1542291026-7eec264c27ff') },
-  { id: 18, category: 'Fashion', name: 'Adidas Ultraboost 22',         price: 180, imageURL: U('1608231387042-66d1773d3716') },
-  { id: 19, category: 'Fashion', name: 'Ray-Ban Aviator Classic',      price: 154, imageURL: U('1511499767315-a5a27ce1fb86') },
+  { id: 18, category: 'Fashion', name: 'Adidas Ultraboost 22',         price: 180, imageURL: ('/fashion/Adidas-Ultraboost-22.jpg') },
+  { id: 19, category: 'Fashion', name: 'Ray-Ban Aviator Classic',      price: 154, imageURL: ('/fashion/Ray-Ban-Aviator-Classic.jpg') },
   { id: 20, category: 'Fashion', name: 'Minimalist Leather Watch',     price: 185, imageURL: U('1523275335684-37898b6baf30') },
   { id: 21, category: 'Fashion', name: 'Ivory Cashmere Sweater',       price: 220, imageURL: U('1434389677669-e08b4cac3105') },
-  { id: 22, category: 'Fashion', name: 'Structured Canvas Tote',       price: 75,  imageURL: U('1548036161-65bd85c9a3a7') },
+  { id: 22, category: 'Fashion', name: 'Structured Canvas Tote',       price: 75,  imageURL: ('/fashion/Structured-Canvas-Tote.jpg') },
   { id: 23, category: 'Fashion', name: 'Merino Wool Overcoat',         price: 395, imageURL: U('1591047139829-d91aecb6caea') },
   { id: 24, category: 'Fashion', name: 'White Oxford Shirt',           price: 95,  imageURL: U('1596755094514-f87e34085b2c') },
-  { id: 25, category: 'Fashion', name: 'Slim Chino Trousers',          price: 85,  imageURL: U('1473966968600-fa807c786ef4') },
+  { id: 25, category: 'Fashion', name: 'Slim Chino Trousers',          price: 85,  imageURL: ('/fashion/Slim-Chino-Trousers.png') },
   { id: 26, category: 'Fashion', name: 'Chelsea Leather Boots',        price: 275, imageURL: U('1638247025967-b4e38f787b76') },
   { id: 27, category: 'Fashion', name: 'Classic Linen Blazer',         price: 310, imageURL: U('1507679799987-c73779587ccf') },
-  { id: 28, category: 'Fashion', name: 'Patterned Silk Scarf',         price: 65,  imageURL: U('1601924638-9c37a0aba7e0') },
-  { id: 29, category: 'Fashion', name: 'Leather Bifold Wallet',        price: 55,  imageURL: U('1627123424574-3729898f7ee7') },
-  { id: 30, category: 'Fashion', name: 'Structured Crossbody Bag',     price: 145, imageURL: U('1548036161-65bd85c9a3a7') },
+  { id: 28, category: 'Fashion', name: 'Patterned Silk Scarf',         price: 65,  imageURL: ('/fashion/Patterned-Silk-Scarf.jpg') },
+  { id: 29, category: 'Fashion', name: 'Leather Bifold Wallet',        price: 55,  imageURL: ('/fashion/Leather-Bifold-Wallet.jpg') },
+  { id: 30, category: 'Fashion', name: 'Structured Crossbody Bag',     price: 145, imageURL: ('/fashion/Structured-Crossbody-Bag.jpg') },
   { id: 31, category: 'Groceries', name: 'Organic Honeycrisp Apples',   price: 6.99,  imageURL: U('1568702846914-96b305d2aaeb') },
   { id: 32, category: 'Groceries', name: 'Cold Pressed Olive Oil 500ml',price: 38,    imageURL: U('1474979266404-7eaacbcd87c5') },
   { id: 33, category: 'Groceries', name: 'Whole Bean Dark Roast 250g',  price: 26,    imageURL: U('1559056199-641a0ac8b55e') },
   { id: 34, category: 'Groceries', name: 'Artisan Sourdough Loaf',      price: 9.50,  imageURL: U('1509440159596-0249088772ff') },
-  { id: 35, category: 'Groceries', name: 'Raw Wildflower Honey 350g',   price: 18,    imageURL: U('1587049352846-b0a53e0f2f1d') },
+  { id: 35, category: 'Groceries', name: 'Raw Wildflower Honey 350g',   price: 18,    imageURL: ('/Groceries/Raw-Wildflower-Honey-350g.jpg') },
   { id: 36, category: 'Groceries', name: 'Aged Parmesan Wedge 200g',    price: 14,    imageURL: U('1486297678162-eb2a19b0a32d') },
   { id: 37, category: 'Groceries', name: 'Organic Matcha Powder 80g',   price: 22,    imageURL: U('1515823662972-da6a2e4d3002') },
   { id: 38, category: 'Groceries', name: 'Truffle Salt 100g',           price: 16,    imageURL: U('1499028344343-cd173ffc68a9') },
-  { id: 39, category: 'Groceries', name: 'Medjool Dates 500g',          price: 13,    imageURL: U('1601004890849-9b04c4c4a8c3') },
-  { id: 40, category: 'Groceries', name: 'Heirloom Cherry Tomatoes',    price: 7.50,  imageURL: U('1546094096-0df4cec9d125') },
-  { id: 41, category: 'Groceries', name: 'Smoked Paprika & Spice Set',  price: 24,    imageURL: U('1532336259264-f7b9e476c0a2') },
+  { id: 39, category: 'Groceries', name: 'Medjool Dates 500g',          price: 13,    imageURL: ('/Groceries/Medjool-Dates-500g.jpg') },
+  { id: 40, category: 'Groceries', name: 'Heirloom Cherry Tomatoes',    price: 7.50,  imageURL: ('/Groceries/Heirloom-Cherry-Tomatoes.jpg') },
+  { id: 41, category: 'Groceries', name: 'Smoked Paprika & Spice Set',  price: 24,    imageURL: ('/Groceries/Smoked-Paprika-&-Spice-Set.jpg') },
   { id: 42, category: 'Groceries', name: 'Kombucha Variety 6-Pack',     price: 28,    imageURL: U('1600271886742-f049cd451bba') },
   { id: 43, category: 'Groceries', name: 'Tahini & Sesame Spread',      price: 11,    imageURL: U('1551462147-ff29053bfc14') },
   { id: 44, category: 'Groceries', name: 'Oat Granola — Dark Choc',     price: 12,    imageURL: U('1517686469429-8bdb88b9f907') },
-  { id: 45, category: 'Groceries', name: 'Sun-Dried Mango Slices',      price: 8.50,  imageURL: U('1601004890849-9b04c4c4a8c3') },
-  { id: 46, category: 'Furniture', name: 'Sculptural Boucle Sofa 3-Seat', price: 1850, imageURL: U('1555041469-db61197941e0') },
+  { id: 45, category: 'Groceries', name: 'Sun-Dried Mango Slices',      price: 8.50,  imageURL: ('/Groceries/Sun-Dried-Mango-Slices.jpg') },
+  { id: 46, category: 'Furniture', name: 'Sculptural Boucle Sofa 3-Seat', price: 1850, imageURL: ('/Furniture/Sculptural-Boucle-Sofa-3-Seat.jpg') },
   { id: 47, category: 'Furniture', name: 'Solid Oak Dining Table',        price: 1200, imageURL: U('1617806118233-18e1de247200') },
   { id: 48, category: 'Furniture', name: 'Ergonomic Mesh Office Chair',   price: 489,  imageURL: U('1580480055273-228ff5388ef8') },
   { id: 49, category: 'Furniture', name: 'Sculptural Accent Chair',       price: 850,  imageURL: U('1598300042247-d088f8ab3a91') },
   { id: 50, category: 'Furniture', name: 'Oak & Brass Side Table',        price: 340,  imageURL: U('1532372320572-cda25653a26d') },
-  { id: 51, category: 'Furniture', name: 'Floating Walnut Shelf Set',     price: 290,  imageURL: U('1555041469-db61197941e0') },
+  { id: 51, category: 'Furniture', name: 'Floating Walnut Shelf Set',     price: 290,  imageURL: ('/Furniture/Floating-Walnut-Shelf-Set.jpg') },
   { id: 52, category: 'Furniture', name: 'Smoked Glass Coffee Table',     price: 620,  imageURL: U('1493809842364-78817add7ffb') },
   { id: 53, category: 'Furniture', name: 'Linen Platform Bed Frame',      price: 980,  imageURL: U('1505693416388-ac5ce068fe85') },
   { id: 54, category: 'Furniture', name: 'Rattan Lounge Chair',           price: 460,  imageURL: U('1598300042247-d088f8ab3a91') },
@@ -83,7 +83,7 @@ export const ALL_PRODUCTS = [
   { id: 56, category: 'Furniture', name: 'Terrazzo Planter Large',        price: 95,   imageURL: U('1485955900006-10f4d324d411') },
   { id: 57, category: 'Furniture', name: 'Abstract Canvas 90×120cm',      price: 420,  imageURL: U('1541961017774-22349e4a1262') },
   { id: 58, category: 'Furniture', name: 'Handwoven Wool Rug 200×300',    price: 740,  imageURL: U('1506439773649-6e0eb8cfb237') },
-  { id: 59, category: 'Furniture', name: 'Modular Bookshelf System',      price: 560,  imageURL: U('1555041469-db61197941e0') },
+  { id: 59, category: 'Furniture', name: 'Modular Bookshelf System',      price: 560,  imageURL: ('/Furniture/Modular-Bookshelf-System.jpg') },
   { id: 60, category: 'Furniture', name: 'Ceramic Table Lamp',            price: 175,  imageURL: U('1507473885765-e6ed057f782c') },
 ];
 
@@ -93,10 +93,11 @@ export const ALL_PRODUCTS = [
 const GLOBAL_STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Overpass+Mono:wght@300;400;600&display=swap');
 
-  /* ── SITE HEADER wrapper ── */
+  /* ── SITE HEADER (banner + navbar as one sticky unit) ── */
   #site-header {
-    /* Navbar is self-sticky (position:sticky; top:0; z-index:50)
-       This wrapper just groups banner + navbar with no extra stacking */
+    position: sticky;
+    top: 0;
+    z-index: 50;
     background: #000;
   }
 
@@ -206,30 +207,18 @@ const GLOBAL_STYLES = `
     background: #000;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     color: rgba(255,255,255,0.45);
-    padding: 9px 48px 9px 16px;
-    display: flex; align-items: center; justify-content: center;
-    position: relative; min-height: 36px;
+    padding: 9px 6vw;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    position: relative;
   }
   .ann-text {
     font-family: 'Overpass Mono', monospace;
-    font-size: 8px; letter-spacing: 0.35em; text-transform: uppercase;
-    text-align: center; line-height: 1.6;
+    font-size: 8px; letter-spacing: 0.45em; text-transform: uppercase;
+    text-align: center;
   }
   .ann-text strong { color: rgba(255,255,255,0.7); }
-  /* Hide the decorative stars and long text on mobile */
-  .ann-mobile-hide { display: inline; }
-  @media (max-width: 600px) {
-    .ann-mobile-hide { display: none; }
-    .ann-bar { padding: 8px 40px 8px 12px; }
-    .ann-text { font-size: 7.5px; letter-spacing: 0.2em; }
-  }
-  .ann-close {
-    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-    background: none; border: none; color: rgba(255,255,255,0.2);
-    cursor: pointer; padding: 6px; transition: color 0.2s;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
+  .ann-text a { color: rgba(255,255,255,0.5); text-decoration: underline; text-underline-offset: 3px; }
+  .ann-close { position: absolute; right: 20px; background: none; border: none; color: rgba(255,255,255,0.2); cursor: pointer; padding: 4px; transition: color 0.2s; }
   .ann-close:hover { color: rgba(255,255,255,0.7); }
 
   /* ── RECENTLY VIEWED ── */
@@ -251,7 +240,7 @@ const GLOBAL_STYLES = `
 
   /* ── NAV GUARD ── */
   .ng-bar {
-    position: sticky; top: var(--header-h, 64px); z-index: 40;
+    position: sticky; top: 0; z-index: 40;
     background: rgba(0,0,0,0.97);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -425,13 +414,10 @@ const AnnouncementBanner = () => {
   return (
     <div className="ann-bar">
       <span className="ann-text">
-        <span className="ann-mobile-hide">✦ Free archival shipping on orders over $150 — use code </span>
-        <span style={{ display:'inline' }} className="ann-mobile-show">Free shipping · code </span>
-        <strong>SHIP2026</strong>
-        <span className="ann-mobile-hide"> at checkout ✦</span>
+        ✦ Free archival shipping on orders over $150 — use code <strong>SHIP2026</strong> at checkout ✦
       </span>
       <button className="ann-close" onClick={() => setVisible(false)} aria-label="Close">
-        <X size={11} />
+        <X size={12} />
       </button>
     </div>
   );
@@ -739,7 +725,7 @@ const App = () => {
 
       <div
         onClickCapture={handleGlobalClick}
-        style={{ background: '#000', minHeight: '100vh', overflowX: 'clip' }}
+        style={{ background: '#000', minHeight: '100vh', overflowX: 'hidden' }}
       >
         {/*
           ── SITE HEADER ──────────────────────────────────────────────
